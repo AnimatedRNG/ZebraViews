@@ -42,8 +42,6 @@
 
          This contains project specific properties such as project target, and library
          dependencies. Lower level build properties are stored in ant.properties
-         (or in .classpath for Eclipse projects).
-
          This file is an integral part of the build system for your
          application and should be checked into Version Control Systems. -->
     <loadproperties srcFile="project.properties" />
