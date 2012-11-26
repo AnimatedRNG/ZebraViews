@@ -1,13 +1,16 @@
 package com.animatedjuzz.zebraviews;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.widget.SearchView;
+import com.google.zxing.Result;
+import com.google.zxing.client.android.CaptureActivity;
 
-public class ScannerActivity extends SherlockActivity {
+public class ScannerActivity extends CaptureActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,5 +27,10 @@ public class ScannerActivity extends SherlockActivity {
     	search.setQueryHint(getResources().getString(R.string.scanner_menu_search));
     	search.setIconifiedByDefault(false);
     	return super.onCreateOptionsMenu(menu);
+    }
+	
+	@Override
+	public void handleDecode(Result rawResult, Bitmap barcode) {
+		Toast.makeText(this.getApplicationContext(), "Scanned code "+ rawResult.getText(), Toast.LENGTH_LONG).show();
     }
 }
