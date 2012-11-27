@@ -2,11 +2,13 @@ package com.animatedjuzz.zebraviews;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.widget.SearchView;
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.google.zxing.client.android.CaptureActivity;
 
@@ -32,5 +34,10 @@ public class ScannerActivity extends CaptureActivity {
 	@Override
 	public void handleDecode(Result rawResult, Bitmap barcode) {
 		Toast.makeText(this.getApplicationContext(), "Scanned code "+ rawResult.getText(), Toast.LENGTH_LONG).show();
+		if (rawResult.getBarcodeFormat() == BarcodeFormat.QR_CODE)
+		{
+			Intent browserQR = new Intent(Intent.ACTION_VIEW, Uri.parse(rawResult.getText()));
+			startActivity(browserQR);
+		}
     }
 }
