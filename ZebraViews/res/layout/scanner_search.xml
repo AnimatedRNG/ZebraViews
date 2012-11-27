@@ -5,4 +5,7 @@
           android:icon="@drawable/ic_menu_search"
           android:showAsAction="ifRoom|collapseActionView"
           android:actionViewClass="com.actionbarsherlock.widget.SearchView" />
+    <item android:id="@+id/scanner_settings"
+          android:icon="@drawable/ic_menu_settings_holo_light"
+          android:showAsAction="ifRoom" />
 </menu>
