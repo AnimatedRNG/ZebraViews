@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -48,4 +49,16 @@ public class ScannerActivity extends CaptureActivity {
 			finish();
 		}
     }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			
+			case R.id.scanner_settings:
+				Intent settings = new Intent(ScannerActivity.this,
+					SettingsActivity.class);
+				startActivity(settings);
+			}
+		return super.onOptionsItemSelected(item);
+	}
 }
