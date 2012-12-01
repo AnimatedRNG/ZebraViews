@@ -39,5 +39,13 @@ public class ScannerActivity extends CaptureActivity {
 			Intent browserQR = new Intent(Intent.ACTION_VIEW, Uri.parse(rawResult.getText()));
 			startActivity(browserQR);
 		}
+		else
+		{
+			Intent reviews = new Intent(ScannerActivity.this, ReviewsActivity.class);
+			reviews.putExtra("com.animated.juzzz.zebraviews.BARCODE_TEXT",
+					rawResult.getText());
+			startActivity(reviews);
+			finish();
+		}
     }
 }
