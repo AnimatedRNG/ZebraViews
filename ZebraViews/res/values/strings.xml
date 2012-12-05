@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">ZebraViews</string>
 	<string name="scanner_menu_search">Search for product manually</string>
+	<string name="reviews_tab_title">Reviews</string>
+	<string name="previous_searches_title">Previous Searches</string>
 </resources>
