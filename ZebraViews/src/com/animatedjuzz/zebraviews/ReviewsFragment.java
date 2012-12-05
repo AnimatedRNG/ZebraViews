@@ -1,7 +1,7 @@
 package com.animatedjuzz.zebraviews;
 
-import android.support.v4.app.Fragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public class ReviewsFragment extends Fragment {
+public class ReviewsFragment extends SherlockFragment {
 	
 }
