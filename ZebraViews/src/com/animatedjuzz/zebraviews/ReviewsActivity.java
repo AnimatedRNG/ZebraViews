@@ -8,12 +8,12 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.ActionBar;
 
-public class ReviewsActivity extends SherlockActivity implements ActionBar.TabListener{
+public class ReviewsActivity extends SherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		setContentView(R.layout.reviews_layout);
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 	}
 
@@ -23,20 +23,4 @@ public class ReviewsActivity extends SherlockActivity implements ActionBar.TabLi
         Intent scanner = new Intent(ReviewsActivity.this, ScannerActivity.class);
         startActivity(scanner);
 	}
-
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		
-	}
-
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		
-	}
-
-	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-		
-	}
-
 }
