@@ -41,7 +41,7 @@ public class ReviewsActivity extends SherlockFragmentActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-        Intent scanner = new Intent(ReviewsActivity.this, ScannerActivity.class);
-        startActivity(scanner);
+		Intent scanner = new Intent(ReviewsActivity.this, ScannerActivity.class);
+		startActivity(scanner);
 	}
 }
