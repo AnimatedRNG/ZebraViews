@@ -4,14 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
     android:orientation="vertical" >
-
-    <fragment
-        android:id="@+id/reviews_frag"
-        android:layout_width="0dip"
-        android:layout_height="0dip"
-        class="com.animatedjuzz.zebraviews.ReviewsFragment"
-        android:layout_weight="1">
-
-    </fragment>
-    
 </LinearLayout>
