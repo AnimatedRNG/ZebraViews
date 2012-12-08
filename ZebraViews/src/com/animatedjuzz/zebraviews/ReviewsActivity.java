@@ -7,6 +7,8 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class ReviewsActivity extends SherlockFragmentActivity {
 
@@ -43,5 +45,24 @@ public class ReviewsActivity extends SherlockFragmentActivity {
 		super.onBackPressed();
 		Intent scanner = new Intent(ReviewsActivity.this, ScannerActivity.class);
 		startActivity(scanner);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			
+			case R.id.scanner_settings:
+				Intent settings = new Intent(ReviewsActivity.this,
+					SettingsActivity.class);
+				startActivity(settings);
+			}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override 
+    public boolean onCreateOptionsMenu(Menu menu) {
+		com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.layout.reviews_actionbar, menu);
+    	return super.onCreateOptionsMenu(menu);
 	}
 }
