@@ -55,7 +55,10 @@ public class ReviewsActivity extends SherlockFragmentActivity {
 				Intent settings = new Intent(ReviewsActivity.this,
 					SettingsActivity.class);
 				startActivity(settings);
-			}
+			
+			case (R.id.shopper):
+				//Launch Google Shopper for this item.
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
