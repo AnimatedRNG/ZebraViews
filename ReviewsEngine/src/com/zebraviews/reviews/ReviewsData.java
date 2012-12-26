@@ -17,6 +17,24 @@
 
 package com.zebraviews.reviews;
 
-public class ReviewsData {
+import java.util.ArrayList;
 
+public class ReviewsData {
+	
+	private ArrayList<Review> reviews;
+	
+	public ReviewsData() {
+	}
+	
+	public ReviewsData(ArrayList<Review> reviews) {
+		this.reviews = reviews;
+	}
+	
+	public ArrayList<Review> getReviews() {
+		return this.reviews;
+	}
+	
+	public void addReview(Review review) {
+		this.reviews.add(review);
+	}
 }
