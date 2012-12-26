@@ -15,6 +15,6 @@
 //	You should have received a copy of the GNU General Public License
 //	along with ZebraViews.  If not, see <http://www.gnu.org/licenses/>.
 
-public interface Scraper {
+public interface Scraper extends Runnable{
 
 }
