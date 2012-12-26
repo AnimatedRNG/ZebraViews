@@ -15,7 +15,7 @@
 //	You should have received a copy of the GNU General Public License
 //	along with ZebraViews.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.zebraviews.reviews;
+package com.zebraviews.reviews.scraper;
 
 public interface Scraper extends Runnable{
 
