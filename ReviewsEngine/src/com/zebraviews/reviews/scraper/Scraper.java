@@ -17,6 +17,9 @@
 
 package com.zebraviews.reviews.scraper;
 
-public interface Scraper extends Runnable{
-
+public interface Scraper extends Runnable {
+	
+	public boolean isComplete();
+	
+	public void setCompletion(boolean complete);
 }
