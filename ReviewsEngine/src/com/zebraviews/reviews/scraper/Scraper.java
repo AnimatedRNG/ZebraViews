@@ -21,5 +21,5 @@ public interface Scraper extends Runnable {
 	
 	public boolean isComplete();
 	
-	public void setCompletion(boolean complete);
+	public void setCompletion(boolean complete); 
 }
