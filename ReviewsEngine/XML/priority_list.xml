@@ -1,2 +1,8 @@
 <priority_list>
-</priority_list>>
+    <scraper>
+        <name>Amazon</name>
+        <priority>10.0</priority>
+        <enabled>true</enabled>>
+        <interruptable>false</interruptable>
+    </scraper>
+</priority_list>
