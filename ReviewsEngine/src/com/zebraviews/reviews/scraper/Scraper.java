@@ -19,7 +19,15 @@ package com.zebraviews.reviews.scraper;
 
 public interface Scraper extends Runnable {
 	
+	public float getPriority();
+	
 	public boolean isComplete();
 	
+	public boolean isInterruptible();
+	
 	public void setCompletion(boolean complete); 
+	
+	public void setInterruptibility(boolean interruptibility);
+	
+	public void setPriority();
 }
