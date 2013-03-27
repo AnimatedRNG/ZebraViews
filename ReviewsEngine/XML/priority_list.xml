@@ -1,8 +1,9 @@
+<?xml version="1.0"?>
 <priority_list>
     <scraper>
         <name>Amazon</name>
         <priority>10.0</priority>
         <enabled>true</enabled>>
-        <interruptible>false</interruptable>
+        <interruptible>false</interruptible>
     </scraper>
 </priority_list>
