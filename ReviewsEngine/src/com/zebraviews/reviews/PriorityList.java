@@ -26,6 +26,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -34,8 +36,16 @@ import com.zebraviews.reviews.scraper.Scraper;
 public class PriorityList {
 	
 	private ArrayList<Scraper> scraperPool;
+	private final static String SCRAPER_PACKAGE_PATH = 
+			"com.zebraviews.reviews.scraper";
+	private final static String SCRAPER_SUFFIX = "Scraper";
 	
-	private void inflateList() {
+	public PriorityList() {
+		Document scraperDoc = this.inflateList();
+		this.fillScraperPool(scraperDoc);
+	}
+	
+	private Document inflateList() {
 		scraperPool = new ArrayList<Scraper>();
 		DocumentBuilderFactory priorityFactory = 
 				DocumentBuilderFactory.newInstance();
@@ -58,5 +68,51 @@ public class PriorityList {
 			// TODO Add error handling...
 		}
 		priority.getDocumentElement().normalize();
+		return priority;
+	}
+	
+	private void fillScraperPool(Document scraperList) {
+		NodeList scrapers = scraperList.getElementsByTagName("scraper");
+		
+		for (int scraperIndex = 0; scraperIndex < scrapers.getLength();
+				scraperIndex++)
+		{
+			Node node = scrapers.item(scraperIndex);
+			Element scraperElement = (Element) node;
+			
+			String scraperName = scraperElement.getElementsByTagName("name")
+				.item(0).getTextContent();
+			Float priority = Float.parseFloat(scraperElement
+				.getElementsByTagName("priority").item(0).getTextContent());
+			boolean enabled = Boolean.parseBoolean(scraperElement
+				.getElementsByTagName("enabled").item(0).getTextContent());
+			boolean interruptible = Boolean.parseBoolean(scraperElement
+				.getElementsByTagName("interruptible").item(0)
+				.getTextContent());
+			
+			String completeScraperName = PriorityList.SCRAPER_PACKAGE_PATH +
+					"." + scraperName + PriorityList.SCRAPER_SUFFIX;
+			
+			Class scraperClass = null;
+			Scraper scraper = null;
+			
+			try {
+				scraperClass = Class.forName(completeScraperName);
+				scraper = (Scraper) scraperClass.newInstance();
+			} catch (ClassNotFoundException e) {
+				System.out.println("ClassNotFound Exception");
+				// TODO Add error handling...
+			} catch (InstantiationException e) {
+				System.out.println("Instantiation Exception");
+				// TODO Add error handling...
+			} catch (IllegalAccessException e) {
+				System.out.println("IllegalAccess Exception");
+				// TODO Add error handling...
+			}
+			
+			System.out.println(scraper);
+			
+			this.scraperPool.add(scraper);
+		}
 	}
 }
