@@ -20,6 +20,7 @@ package com.zebraviews.reviews;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,13 +33,15 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.zebraviews.reviews.scraper.Scraper;
+import com.zebraviews.reviews.scraper.ScraperComparator;
 
 public class PriorityList {
 	
-	private ArrayList<Scraper> scraperPool;
+	private PriorityQueue<Scraper> scraperPool;
 	private final static String SCRAPER_PACKAGE_PATH = 
 			"com.zebraviews.reviews.scraper";
 	private final static String SCRAPER_SUFFIX = "Scraper";
+	private final static int MINIMUM_SIZE = 16;
 	
 	public PriorityList() {
 		Document scraperDoc = this.inflateList();
@@ -46,7 +49,8 @@ public class PriorityList {
 	}
 	
 	private Document inflateList() {
-		scraperPool = new ArrayList<Scraper>();
+		scraperPool = new PriorityQueue<Scraper>(PriorityList.MINIMUM_SIZE
+				, new ScraperComparator());
 		DocumentBuilderFactory priorityFactory = 
 				DocumentBuilderFactory.newInstance();
 		DocumentBuilder priorityBuilder = null;
@@ -109,8 +113,6 @@ public class PriorityList {
 				System.out.println("IllegalAccess Exception");
 				// TODO Add error handling...
 			}
-			
-			System.out.println(scraper);
 			
 			this.scraperPool.add(scraper);
 		}
