@@ -3,6 +3,6 @@
         <name>Amazon</name>
         <priority>10.0</priority>
         <enabled>true</enabled>>
-        <interruptable>false</interruptable>
+        <interruptible>false</interruptable>
     </scraper>
 </priority_list>
