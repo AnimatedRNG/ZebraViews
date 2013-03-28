@@ -17,6 +17,8 @@
 
 package com.zebraviews.reviews.scraper;
 
+import com.zebraviews.reviews.ReviewFetchThread;
+
 public interface Scraper extends Runnable {
 	
 	public float getPriority();
@@ -26,6 +28,8 @@ public interface Scraper extends Runnable {
 	public boolean isInterruptible();
 	
 	public void setCompletion(boolean complete); 
+	
+	public void setFetchThread(ReviewFetchThread thread);
 	
 	public void setInterruptibility(boolean interruptibility);
 	
