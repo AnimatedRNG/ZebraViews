@@ -61,4 +61,8 @@ public class ReviewFetchThread extends Thread {
 			this.reviewsQueue = new LinkedList<Review>();
 		this.reviewsQueue.add(review);
 	}
+	
+	public Review retrieveReview() {
+		return this.reviewsQueue.poll();
+	}
 }
