@@ -17,36 +17,37 @@
 
 package com.zebraviews.reviews;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import com.zebraviews.reviews.scraper.Scraper;
 
 public class ReviewFetchThread extends Thread {
 
 	private Scraper scraper;
-	private boolean running;
+	private Queue<Review> reviewsQueue;
 	
 	public ReviewFetchThread() { }
 	
+	//DEPRECATED. INSTEAD, CONSTRUCT WITH Thread(Runnable r)
 	public ReviewFetchThread(Scraper scraper) {
+		this.reviewsQueue = new LinkedList<Review>();
 		this.scraper = scraper;
 	}
 	
 	public boolean activate() {
-		if (this.isActive())
+		if (this.isAlive())
 			return false;
 		else
 		{
 			scraper.setFetchThread(this);
-			scraper.run();
+			this.start();
 			return true;
 		}
 	}
 	
-	public void deactivate() {
-		this.running = false;
-	}
-	
 	public boolean init(Scraper scraper) {
-		if (this.isActive())
+		if (this.isAlive())
 			return false;
 		else
 		{
@@ -55,7 +56,7 @@ public class ReviewFetchThread extends Thread {
 		}
 	}
 	
-	public boolean isActive() {
-		return running;
+	public void addReview(Review review) {
+		this.reviewsQueue.add(review);
 	}
 }
