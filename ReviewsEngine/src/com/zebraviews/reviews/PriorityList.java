@@ -94,6 +94,8 @@ public class PriorityList {
 				.getElementsByTagName("interruptible").item(0)
 				.getTextContent());
 			
+			if (!enabled) return;
+			
 			String completeScraperName = PriorityList.SCRAPER_PACKAGE_PATH +
 					"." + scraperName + PriorityList.SCRAPER_SUFFIX;
 			
@@ -113,6 +115,9 @@ public class PriorityList {
 				System.out.println("IllegalAccess Exception");
 				// TODO Add error handling...
 			}
+			
+			scraper.setPriority(priority);
+			scraper.setInterruptibility(interruptible);
 			
 			this.scraperPool.add(scraper);
 		}
