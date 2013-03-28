@@ -57,6 +57,8 @@ public class ReviewFetchThread extends Thread {
 	}
 	
 	public void addReview(Review review) {
+		if (this.reviewsQueue == null)
+			this.reviewsQueue = new LinkedList<Review>();
 		this.reviewsQueue.add(review);
 	}
 }
