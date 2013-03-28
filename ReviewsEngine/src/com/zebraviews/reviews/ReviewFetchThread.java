@@ -35,9 +35,14 @@ public class ReviewFetchThread extends Thread {
 			return false;
 		else
 		{
+			scraper.setFetchThread(this);
 			scraper.run();
 			return true;
 		}
+	}
+	
+	public void deactivate() {
+		this.running = false;
 	}
 	
 	public boolean init(Scraper scraper) {
