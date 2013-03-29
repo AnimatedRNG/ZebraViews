@@ -126,4 +126,8 @@ public class PriorityList {
 	public Scraper getScraper() {
 		return this.scraperPool.poll();
 	}
+	
+	public boolean hasScraper() {
+		return !this.scraperPool.isEmpty();
+	}
 }
