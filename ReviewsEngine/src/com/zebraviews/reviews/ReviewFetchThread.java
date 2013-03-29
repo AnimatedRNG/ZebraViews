@@ -29,8 +29,8 @@ public class ReviewFetchThread extends Thread {
 	
 	public ReviewFetchThread() { }
 	
-	//DEPRECATED. INSTEAD, CONSTRUCT WITH Thread(Runnable r)
 	public ReviewFetchThread(Scraper scraper) {
+		super(scraper);
 		this.reviewsQueue = new LinkedList<Review>();
 		this.scraper = scraper;
 	}
