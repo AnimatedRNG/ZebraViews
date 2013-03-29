@@ -62,6 +62,10 @@ public class ReviewFetchThread extends Thread {
 		this.reviewsQueue.add(review);
 	}
 	
+	public boolean hasReviews() {
+		return !this.reviewsQueue.isEmpty();
+	}
+	
 	public Review retrieveReview() {
 		return this.reviewsQueue.poll();
 	}
