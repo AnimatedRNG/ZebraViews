@@ -54,4 +54,15 @@ public class ReviewsCompiler {
 		Thread.sleep(ReviewsCompiler.POLL_TIME);
 		return reviews;
 	}
+	
+	public boolean isComplete() {
+		if (!priorityList.hasScraper())
+		{
+			for (ReviewFetchThread r : fetchers)
+				if (r.isAlive()) return false;
+			return true;
+		}
+		else
+			return false;
+	}
 }
