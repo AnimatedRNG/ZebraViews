@@ -20,6 +20,8 @@ package com.zebraviews.reviews;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zebraviews.reviews.scraper.Scraper;
+
 public class ReviewsCompiler {
 	
 	public final static int NUMBER_OF_THREADS = 8;
@@ -33,7 +35,13 @@ public class ReviewsCompiler {
 		priorityList = new PriorityList();
 		
 		for (int i = 0; i < 8; i++)
-			fetchers.add(new ReviewFetchThread(priorityList.getScraper()));
+		{
+			Scraper poolScraper = priorityList.getScraper();
+			if (poolScraper==null)
+				break;
+			else
+				fetchers.add(new ReviewFetchThread(poolScraper));
+		}
 	}
 	
 	public void activateAll() {
