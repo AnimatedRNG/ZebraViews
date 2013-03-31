@@ -24,6 +24,7 @@ public class ReviewsData {
 	private ArrayList<Review> reviews;
 	
 	public ReviewsData() {
+		reviews = new ArrayList<Review>();
 	}
 	
 	public ReviewsData(ArrayList<Review> reviews) {
