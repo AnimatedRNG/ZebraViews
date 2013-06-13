@@ -73,4 +73,19 @@ public class ReviewsCompiler {
 		else
 			return false;
 	}
+	
+	public static String getUPC()
+	{
+		return null;
+	}
+	
+	public static String getProductString()
+	{
+		return null;
+	}
+	
+	public static String getAmazonURL()
+	{
+		return null;
+	}
 }
