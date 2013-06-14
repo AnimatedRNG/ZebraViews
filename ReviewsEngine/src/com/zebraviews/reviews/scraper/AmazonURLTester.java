@@ -6,10 +6,11 @@ public class AmazonURLTester {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String upc="097361700045";
+		String upc="9780451530578";
 		AmazonURL address=new AmazonURL(upc);
 		address.setURL();
-		System.out.println("URL: "+address.getURL());
+		String url=address.getURL();
+		System.out.println(url);
 
 	}
 
