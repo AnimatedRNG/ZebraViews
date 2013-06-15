@@ -17,6 +17,7 @@
 
 package com.zebraviews.reviews.scraper;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,9 +26,9 @@ import org.jsoup.select.Elements;
 
 public class AmazonScraper {
 	public static void main(String[] args) {
-		String upc="013803136340";
+		String upc="044000045586";
 		AmazonURL address=new AmazonURL(upc);
-		address.setURL();
+		address.setURL2();
 		String url=address.getURL();
 		if(!url.equals("No ASIN found"))
 		{
@@ -36,7 +37,12 @@ public class AmazonScraper {
 				Document doc = Jsoup.connect(url).get();
 				Element prodTitle=doc.select("span#btAsinTitle").first();
 				System.out.println(prodTitle.text());
-				Element rating = doc.select("div.jumpbar").first();
+				Element rating = doc.select("div.gry.txtnormal.acrrating").first();
+				if(rating==null)
+				{
+					System.out.println("No reviews exist for this product in any of our sources.");
+					return;
+				}
 				System.out.println("OVERALL RATING: " + rating.text().substring(0, 18));
 				Elements reviews = doc.select("#revMHRL .mt9.reviewtext");
 				Elements titles = doc.select("#revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
@@ -55,6 +61,7 @@ public class AmazonScraper {
 						System.out.println("Reviews found: "+i);
 						break;
 					}
+
 				}
 			}
 			catch (IOException e) {
@@ -62,6 +69,6 @@ public class AmazonScraper {
 			}
 		}
 		else
-			System.out.print("Item does not exist in any of our product review sources.");
+			System.out.println("Item does not exist in any of our product review sources.");
 	}
 }

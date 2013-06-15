@@ -17,9 +17,7 @@
 
 package com.zebraviews.reviews.scraper;
 import java.io.IOException;
-
 import org.jsoup.Jsoup;
-import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -29,8 +27,10 @@ public class AmazonURL
 	public AmazonURL(String upc)
 	{
 		this.upc=upc;
+		url=null;
 	}
 	
+	//DO NOT USE THIS METHOD. USE setURL2().
 	public void setURL()
 	{
 		try
@@ -38,14 +38,43 @@ public class AmazonURL
 			Document doc = Jsoup.connect("http://www.synccentric.com/admin/keyword-results.php?search="+upc).get();
 			Element asinNum = doc.select("div.datacontainer").first();
 			if(asinNum!=null)
-				url="http://www.amazon.com/dp/"+asinNum.text().substring(asinNum.text().indexOf("ASIN")+6, asinNum.text().indexOf("ASIN")+16);
+				url="http://www.amazon.com/dp/"+asinNum.text().substring(asinNum.text().indexOf("ASIN")+6, asinNum.text().indexOf("ASIN")+16)+"/";
 			else
 				url="No ASIN found";
+		}
+		catch (IOException e)
+		{
+				url=("No ASIN found");
+		}		
+	}
+	
+	public void setURL2()
+	{
+		try
+		{
+			Document doc = Jsoup.connect("http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords="+upc).get();
+			Elements links = doc.select("a[href]");
+			if(links==null)
+			{
+				url="No ASIN found";
+				return;
+			}
+			for(Element e: links)
+			{
+				if(e.attr("href").indexOf("http://www.amazon.com/")!=-1 && e.attr("href").indexOf("/dp/")!=-1)
+				{
+					url=e.attr("href");
+					break;
+				}
+			}
 
 		}
-		catch (IOException e) {
+		catch (IOException e)
+		{
+				url=("No ASIN found");
+		}
+		if(url==null)
 			url="No ASIN found";
-		}		
 	}
 	
 	public String getURL()
