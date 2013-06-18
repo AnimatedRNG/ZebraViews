@@ -53,21 +53,13 @@ public class AmazonURL
 		try
 		{
 			Document doc = Jsoup.connect("http://www.amazon.com/s/ref=nb_sb_noss?url=search-alias%3Daps&field-keywords="+upc).get();
-			Elements links = doc.select("a[href]");
-			if(links==null)
+			Element link = doc.select("#atfResults a[href]").first();
+			if(link == null)
 			{
-				url="No ASIN found";
+				url = "No ASIN found";
 				return;
 			}
-			for(Element e: links)
-			{
-				if(e.attr("href").indexOf("http://www.amazon.com/")!=-1 && e.attr("href").indexOf("/dp/")!=-1)
-				{
-					url=e.attr("href");
-					break;
-				}
-			}
-
+			url = link.attr("href");
 		}
 		catch (IOException e)
 		{
