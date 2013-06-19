@@ -68,7 +68,7 @@ public class Review {
 	
 	@Override
 	public String toString() {
-		return "Rating: " + this.rating + "\nIndex: " + this.index +
-				"\nReview: " + this.review;
+		return "Title: " + this.getTitle() + "\nRating: " + this.rating +
+				"\nIndex: " + this.index + "\nReview: " + this.review;
 	}
 }
