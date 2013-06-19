@@ -32,12 +32,12 @@ public class DesktopRunner {
 		
 		ReviewsCompiler compiler = new ReviewsCompiler();
 		compiler.activateAll();
-		while (true)
+		do
 		{
 			for (Review r : compiler.executePartially().getReviews()) {
 				System.out.println(r);
 			}
-		}
+		} while (!compiler.isComplete());
 	}
 
 }
