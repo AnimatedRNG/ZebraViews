@@ -31,7 +31,7 @@ public class AmazonURL
 	}
 	
 	//DO NOT USE THIS METHOD. USE setURL2().
-	public void setURL()
+	/*public void setURL()
 	{
 		try
 		{
@@ -46,9 +46,9 @@ public class AmazonURL
 		{
 				url=("No ASIN found");
 		}		
-	}
+	}*/
 	
-	public void setURL2()
+	public void setURL()
 	{
 		try
 		{

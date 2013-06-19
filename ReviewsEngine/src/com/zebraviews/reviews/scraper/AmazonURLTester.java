@@ -6,11 +6,15 @@ public class AmazonURLTester {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String upc="027000488287";
+		long startTime = System.nanoTime();
+		String upc="9780439420105";
 		AmazonURL address=new AmazonURL(upc);
-		address.setURL2();
+		address.setURL();
 		String url=address.getURL();
 		System.out.println(url);
+		long endTime = System.nanoTime();
+		System.out.println("Took "+(endTime - startTime) + " ns");
+
 	}
 
 }

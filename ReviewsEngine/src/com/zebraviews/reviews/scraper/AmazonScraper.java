@@ -26,10 +26,12 @@ import org.jsoup.select.Elements;
 
 public class AmazonScraper {
 	public static void main(String[] args) {
-		String upc="044000045586";
+		
+		String upc="9780439420105";
 		AmazonURL address=new AmazonURL(upc);
-		address.setURL2();
+		address.setURL();
 		String url=address.getURL();
+		long startTime = System.nanoTime();
 		if(!url.equals("No ASIN found"))
 		{
 			try
@@ -70,5 +72,7 @@ public class AmazonScraper {
 		}
 		else
 			System.out.println("Item does not exist in any of our product review sources.");
+		long endTime = System.nanoTime();
+		System.out.println("\nTook "+(endTime - startTime) + " ns");
 	}
 }
