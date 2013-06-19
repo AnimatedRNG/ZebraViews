@@ -17,62 +17,106 @@
 
 package com.zebraviews.reviews.scraper;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class AmazonScraper {
-	public static void main(String[] args) {
-		
-		String upc="9780439420105";
-		AmazonURL address=new AmazonURL(upc);
-		address.setURL();
-		String url=address.getURL();
-		long startTime = System.nanoTime();
+import com.zebraviews.reviews.AmazonURL;
+import com.zebraviews.reviews.Review;
+import com.zebraviews.reviews.ReviewFetchThread;
+import com.zebraviews.reviews.ReviewsCompiler;
+
+public class AmazonScraper implements Scraper {
+	
+	private float priority;
+	private boolean interruptibility;
+	private boolean complete;
+	private int reviewCount = 0;
+	private ReviewFetchThread fetchThread;
+
+	@Override
+	public void run() {
+		AmazonURL address = new AmazonURL(ReviewsCompiler.getUPC());
+		address.generateURL();
+		String url = address.getURL();
 		if(!url.equals("No ASIN found"))
 		{
 			try
 			{
 				Document doc = Jsoup.connect(url).get();
-				Element prodTitle=doc.select("span#btAsinTitle").first();
-				System.out.println(prodTitle.text());
+				//Element prodTitle=doc.select("span#btAsinTitle").first();
+				//System.out.println(prodTitle.text());
 				Element rating = doc.select("div.gry.txtnormal.acrrating").first();
 				if(rating==null)
 				{
-					System.out.println("No reviews exist for this product in any of our sources.");
+					this.setCompletion(true);
 					return;
 				}
-				System.out.println("OVERALL RATING: " + rating.text().substring(0, 18));
+				//System.out.println("OVERALL RATING: " + rating.text().substring(0, 18));
 				Elements reviews = doc.select("#revMHRL .mt9.reviewtext");
 				Elements titles = doc.select("#revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
-				for(int i = 0; i < 10; i++)
+				while (this.reviewCount < reviews.size())
 				{
-					try
-					{
-						String title = titles.get(i).text();
-						String review = reviews.get(i).text();
-						review = review.replace("Read more ›", "");
-						System.out.println("\nTITLE OF REVIEW: " + title);
-						System.out.println("REVIEW: " + review);
-					}
-					catch (IndexOutOfBoundsException e) 
-					{
-						System.out.println("Reviews found: "+i);
-						break;
-					}
-
+					String title = titles.get(this.reviewCount).text();
+					String review = reviews.get(this.reviewCount).text();
+					review = review.replace("Read more ï¿½", "");
+					
+					// Amazon's reviews are out of 5
+					Review rev = new Review(review, 
+							Integer.parseInt(rating.text().substring(0,1))
+							*2, reviewCount++);
+					rev.setTitle(title);
+					
+					this.fetchThread.addReview(rev);
+					
+					//System.out.println("\nTITLE OF REVIEW: " + title);
+					//System.out.println("REVIEW: " + review);
+					if (Thread.interrupted())
+						return;
 				}
 			}
 			catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		else
-			System.out.println("Item does not exist in any of our product review sources.");
-		long endTime = System.nanoTime();
-		System.out.println("\nTook "+(endTime - startTime) + " ns");
+		this.setCompletion(true);
+		
+	}
+
+	@Override
+	public float getPriority() {
+		return this.priority;
+	}
+
+	@Override
+	public boolean isComplete() {
+		return this.complete;
+	}
+
+	@Override
+	public boolean isInterruptible() {
+		return this.interruptibility;
+	}
+
+	@Override
+	public void setCompletion(boolean complete) {
+		this.complete = complete;
+	}
+
+	@Override
+	public void setFetchThread(ReviewFetchThread thread) {
+		this.fetchThread = thread;
+	}
+
+	@Override
+	public void setInterruptibility(boolean interruptibility) {
+		this.interruptibility = interruptibility;
+	}
+
+	@Override
+	public void setPriority(float priority) {
+		this.priority = priority;
 	}
 }

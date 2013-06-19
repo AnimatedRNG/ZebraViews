@@ -17,10 +17,27 @@
 
 package com.zebraviews.reviews;
 
+
 public class DesktopRunner {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws InterruptedException {
+		long startTime = System.nanoTime();
+		String upc="9780439420105";
+		AmazonURL address=new AmazonURL(upc);
+		address.generateURL();
+		String url=address.getURL();
+		System.out.println(url);
+		long endTime = System.nanoTime();
+		System.out.println("Took "+(endTime - startTime) + " ns");
+		
+		ReviewsCompiler compiler = new ReviewsCompiler();
+		compiler.activateAll();
+		while (true)
+		{
+			for (Review r : compiler.executePartially().getReviews()) {
+				System.out.println(r);
+			}
+		}
 	}
 
 }

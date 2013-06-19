@@ -15,12 +15,12 @@
 //	You should have received a copy of the GNU General Public License
 //	along with ZebraViews.  If not, see <http://www.gnu.org/licenses/>.
 
-package com.zebraviews.reviews.scraper;
+package com.zebraviews.reviews;
 import java.io.IOException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class AmazonURL
 {
@@ -30,7 +30,7 @@ public class AmazonURL
 		url=null;
 	}
 	
-	//DO NOT USE THIS METHOD. USE setURL2().
+	//DO NOT USE THIS METHOD. USE setURL().
 	/*public void setURL()
 	{
 		try
@@ -48,7 +48,7 @@ public class AmazonURL
 		}		
 	}*/
 	
-	public void setURL()
+	public void generateURL()
 	{
 		try
 		{
