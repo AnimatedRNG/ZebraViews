@@ -48,8 +48,8 @@ public class AmazonScraper implements Scraper {
 				Document doc = Jsoup.connect(url).get();
 				//Element prodTitle=doc.select("span#btAsinTitle").first();
 				//System.out.println(prodTitle.text());
-				Element rating = doc.select("div.gry.txtnormal.acrrating").first();
-				if(rating==null)
+				Element overallRating = doc.select("div.gry.txtnormal.acrrating").first();
+				if(overallRating==null)
 				{
 					this.setCompletion(true);
 					return;
@@ -57,17 +57,20 @@ public class AmazonScraper implements Scraper {
 				//System.out.println("OVERALL RATING: " + rating.text().substring(0, 18));
 				Elements reviews = doc.select("#revMHRL .mt9.reviewtext");
 				Elements titles = doc.select("#revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
+				Elements ratings = doc.select("div.mt4.ttl");
 				while (this.reviewCount < reviews.size())
 				{
 					String title = titles.get(this.reviewCount).text();
 					String review = reviews.get(this.reviewCount).text();
+					int rating = (int) Math.round((2 * Double.parseDouble(ratings.get(reviewCount).text().substring(0, 3))));
 					review = review.replace("Read more �", "");
 					
 					// Amazon's reviews are out of 5
 					Review rev = new Review(review, 
-							Integer.parseInt(rating.text().substring(0,1))
+							Integer.parseInt(overallRating.text().substring(0,1))
 							*2, reviewCount++);
 					rev.setTitle(title);
+					rev.setRating(rating);
 					
 					this.fetchThread.addReview(rev);
 					
