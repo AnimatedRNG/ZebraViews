@@ -20,6 +20,7 @@ package com.zebraviews.reviews;
 public class Review {
 
 	private String review;
+	private String title;
 	private int rating;
 	private int index;
 	
@@ -37,6 +38,10 @@ public class Review {
 		return this.review;
 	}
 	
+	public String getTitle() {
+		return this.title;
+	}
+	
 	public int getRating() {
 		return this.rating;
 	}
@@ -47,6 +52,10 @@ public class Review {
 	
 	public void setReview(String review) {
 		this.review = review;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	
 	public void setRating(int rating) {
