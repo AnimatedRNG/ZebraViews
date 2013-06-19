@@ -51,6 +51,7 @@ public class ReviewsCompiler {
 	
 	public ReviewsData executePartially() throws InterruptedException {
 		ReviewsData reviews = new ReviewsData();
+		Thread.sleep(ReviewsCompiler.POLL_TIME);
 		for (ReviewFetchThread r : fetchers)
 		{
 			while (r.hasReviews())
@@ -59,7 +60,6 @@ public class ReviewsCompiler {
 			if (!r.isAlive() && priorityList.hasScraper())
 				r.init(priorityList.getScraper());
 		}
-		Thread.sleep(ReviewsCompiler.POLL_TIME);
 		return reviews;
 	}
 	
