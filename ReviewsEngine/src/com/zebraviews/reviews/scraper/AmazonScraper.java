@@ -38,7 +38,8 @@ public class AmazonScraper implements Scraper {
 
 	@Override
 	public void run() {
-		AmazonURL address = new AmazonURL(ReviewsCompiler.getUPC());
+		AmazonURL address = new AmazonURL(this.fetchThread.
+				getReviewsCompiler().getUPC());
 		address.generateURL();
 		String url = address.getURL();
 		if(!url.equals("No ASIN found"))

@@ -30,7 +30,7 @@ public class DesktopRunner {
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime) + " ns");
 		
-		ReviewsCompiler compiler = new ReviewsCompiler();
+		ReviewsCompiler compiler = new ReviewsCompiler(upc);
 		compiler.activateAll();
 		do
 		{

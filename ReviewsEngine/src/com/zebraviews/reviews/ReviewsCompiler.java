@@ -29,10 +29,12 @@ public class ReviewsCompiler {
 	
 	private List<ReviewFetchThread> fetchers;
 	private PriorityList priorityList;
+	private String upc;
 	
-	public ReviewsCompiler() {
+	public ReviewsCompiler(String upc) {
 		fetchers = new ArrayList<ReviewFetchThread>();
 		priorityList = new PriorityList();
+		this.upc = upc;
 		
 		for (int i = 0; i < 8; i++)
 		{
@@ -40,7 +42,7 @@ public class ReviewsCompiler {
 			if (poolScraper==null)
 				break;
 			else
-				fetchers.add(new ReviewFetchThread(poolScraper));
+				fetchers.add(new ReviewFetchThread(this, poolScraper));
 		}
 	}
 	
@@ -74,17 +76,17 @@ public class ReviewsCompiler {
 			return false;
 	}
 	
-	public static String getUPC()
+	public String getUPC()
+	{
+		return this.upc;
+	}
+	
+	public String getProductString()
 	{
 		return null;
 	}
 	
-	public static String getProductString()
-	{
-		return null;
-	}
-	
-	public static String getAmazonURL()
+	public String getAmazonURL()
 	{
 		return null;
 	}

@@ -25,14 +25,16 @@ import com.zebraviews.reviews.scraper.Scraper;
 public class ReviewFetchThread extends Thread {
 
 	private Scraper scraper;
+	private ReviewsCompiler compiler;
 	private Queue<Review> reviewsQueue;
 	
 	public ReviewFetchThread() { }
 	
-	public ReviewFetchThread(Scraper scraper) {
+	public ReviewFetchThread(ReviewsCompiler compiler, Scraper scraper) {
 		super(scraper);
 		this.reviewsQueue = new LinkedList<Review>();
 		this.scraper = scraper;
+		this.compiler = compiler;
 	}
 	
 	public boolean activate() {
@@ -68,5 +70,9 @@ public class ReviewFetchThread extends Thread {
 	
 	public Review retrieveReview() {
 		return this.reviewsQueue.poll();
+	}
+	
+	public ReviewsCompiler getReviewsCompiler() {
+		return this.compiler;
 	}
 }
