@@ -28,13 +28,11 @@
         </activity>
         <activity
             android:label="@string/app_name"
-            android:name=".ReviewsActivity"
-            android:screenOrientation="landscape">
+            android:name=".ReviewsActivity">
         </activity>
         <activity
             android:label="@string/app_name"
-            android:name=".SettingsActivity"
-            android:screenOrientation="landscape">
+            android:name=".SettingsActivity">
         </activity>
     </application>
 </manifest>
