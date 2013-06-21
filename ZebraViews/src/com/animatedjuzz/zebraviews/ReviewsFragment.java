@@ -18,8 +18,19 @@
 package com.animatedjuzz.zebraviews;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.zebraviews.reviews.ReviewsData;
 
 public class ReviewsFragment extends SherlockFragment 
 										implements ReviewsListener {
+
+	@Override
+	public void onReviewsDataDownloaded(ReviewsData data) {
+		
+	}
+
+	@Override
+	public void onCompletion() {
+		
+	}
 	
 }
