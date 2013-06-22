@@ -17,8 +17,8 @@
 
 package com.animatedjuzz.zebraviews;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockListFragment;
 
-public class PreviousSearchesFragment extends SherlockFragment {
+public class PreviousSearchesFragment extends SherlockListFragment {
 
 }

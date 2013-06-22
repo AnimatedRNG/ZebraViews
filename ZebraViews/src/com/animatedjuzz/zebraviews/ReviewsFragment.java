@@ -17,10 +17,10 @@
 
 package com.animatedjuzz.zebraviews;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.zebraviews.reviews.ReviewsData;
 
-public class ReviewsFragment extends SherlockFragment 
+public class ReviewsFragment extends SherlockListFragment 
 										implements ReviewsListener {
 
 	@Override
