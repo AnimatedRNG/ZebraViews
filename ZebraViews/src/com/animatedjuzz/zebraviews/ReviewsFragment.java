@@ -17,20 +17,59 @@
 
 package com.animatedjuzz.zebraviews;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import java.util.ArrayList;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+
+import com.actionbarsherlock.app.SherlockFragment;
+import com.zebraviews.reviews.Review;
 import com.zebraviews.reviews.ReviewsData;
 
-public class ReviewsFragment extends SherlockListFragment 
+public class ReviewsFragment extends SherlockFragment 
 										implements ReviewsListener {
+
+	private ArrayAdapter<String> adapter;
+	private ArrayList<String> reviewList;
+	
+	private ProgressBar progress;
+	
+	private final static int MINIMUM_REVIEWS = 8;
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View total = inflater.inflate(R.layout.reviews_fragment, 
+				container, false);
+		ListView list = (ListView) total.findViewById(R.id.review_list);
+		this.reviewList = new ArrayList<String>();
+		this.adapter = new ArrayAdapter<String>(this.getActivity(),
+				android.R.layout.simple_list_item_1, reviewList);
+		list.setAdapter(this.adapter);
+		
+		this.progress = (ProgressBar) 
+				total.findViewById(R.id.review_loading);
+		this.progress.setVisibility(View.VISIBLE);
+		
+		return total;
+	}
 
 	@Override
 	public void onReviewsDataDownloaded(ReviewsData data) {
-		
+		for (Review review : data.getReviews())
+			this.reviewList.add(review.getReview());
+		if (this.reviewList.size() >= ReviewsFragment.MINIMUM_REVIEWS)
+			this.adapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public void onCompletion() {
-		
+		this.adapter.notifyDataSetChanged();
 	}
 	
 }
