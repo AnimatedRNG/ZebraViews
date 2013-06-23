@@ -64,7 +64,10 @@ public class ReviewsFragment extends SherlockFragment
 		for (Review review : data.getReviews())
 			this.reviewList.add(review.getReview());
 		if (this.reviewList.size() >= ReviewsFragment.MINIMUM_REVIEWS)
+		{
 			this.adapter.notifyDataSetChanged();
+			this.progress.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
