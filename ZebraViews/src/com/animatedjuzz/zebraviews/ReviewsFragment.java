@@ -31,8 +31,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.zebraviews.reviews.Review;
 import com.zebraviews.reviews.ReviewsData;
 
-public class ReviewsFragment extends SherlockFragment 
-										implements ReviewsListener {
+public class ReviewsFragment extends SherlockFragment implements ReviewsListener {
 
 	private ArrayAdapter<String> adapter;
 	private ArrayList<String> reviewList;
