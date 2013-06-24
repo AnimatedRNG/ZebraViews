@@ -79,7 +79,7 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	@Override
 	public void onReviewsDataDownloaded(ReviewsData data) {
 		for (Review review : data.getReviews())
-			this.reviewList.add(review.getReview());
+			this.reviewList.add(review.toString());
 		if (this.reviewList.size() == ReviewsFragment.MINIMUM_REVIEWS)
 			this.progress.setVisibility(View.GONE);
 		if (this.reviewList.size() >= ReviewsFragment.MINIMUM_REVIEWS)

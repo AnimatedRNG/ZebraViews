@@ -21,7 +21,7 @@ public class Review {
 
 	private String review;
 	private String title;
-	private int rating;
+	private String rating;
 	private int index;
 	
 	public Review(int index) {
@@ -30,7 +30,7 @@ public class Review {
 	
 	public Review(String review, int rating, int index) {
 		this.review = review;
-		this.rating = rating;
+		this.rating = rating+"/10";
 		this.index = index;
 	}
 	
@@ -42,7 +42,7 @@ public class Review {
 		return this.title;
 	}
 	
-	public int getRating() {
+	public String getRating() {
 		return this.rating;
 	}
 	
@@ -59,7 +59,7 @@ public class Review {
 	}
 	
 	public void setRating(int rating) {
-		this.rating = rating;
+		this.rating = rating+"/10";
 	}
 	
 	public void setIndex(int index) {
@@ -68,7 +68,9 @@ public class Review {
 	
 	@Override
 	public String toString() {
-		return "Title: " + this.getTitle() + "\nRating: " + this.rating +
-				"\nIndex: " + this.index + "\nReview: " + this.review;
+		if(!title.equals(""))
+			return "TITLE: " + this.getTitle() + "\nRATING: " + this.rating +/*"\nIndex: " + this.index + */"\n\nREVIEW: " + this.review + "\n___________________________________________";
+		else
+			return "No reviews found";
 	}
 }

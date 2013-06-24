@@ -36,7 +36,8 @@ public class AmazonScraper implements Scraper {
 	private ReviewFetchThread fetchThread;
 
 	@Override
-	public void run() {
+	public void run()
+	{
 		AmazonURL address = new AmazonURL(this.fetchThread.
 				getReviewsCompiler().getUPC());
 		address.generateURL();
@@ -50,7 +51,11 @@ public class AmazonScraper implements Scraper {
 				//System.out.println(prodTitle.text());
 				Element overallRating = doc.select("div.gry.txtnormal.acrrating").first();
 				if(overallRating==null)
-				{
+				{	
+					Review rev= new Review("No reviews found", 0, reviewCount);
+					rev.setTitle("");
+					rev.setRating(0);
+					this.fetchThread.addReview(rev);					
 					this.setCompletion(true);
 					return;
 				}
@@ -82,8 +87,14 @@ public class AmazonScraper implements Scraper {
 			catch (IOException e) {
 			}
 		}
+		else
+		{
+			Review rev= new Review("No reviews found", 0, reviewCount);
+			rev.setTitle("");
+			rev.setRating(0);
+			this.fetchThread.addReview(rev);
+		}		
 		this.setCompletion(true);
-
 	}
 
 	@Override
