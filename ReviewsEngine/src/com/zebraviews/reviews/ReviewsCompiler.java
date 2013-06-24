@@ -17,6 +17,7 @@
 
 package com.zebraviews.reviews;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,9 +32,9 @@ public class ReviewsCompiler {
 	private PriorityList priorityList;
 	private String upc;
 	
-	public ReviewsCompiler(String upc) {
+	public ReviewsCompiler(String upc, InputStream priorityListFile) {
 		fetchers = new ArrayList<ReviewFetchThread>();
-		priorityList = new PriorityList();
+		priorityList = new PriorityList(priorityListFile);
 		this.upc = upc;
 		
 		for (int i = 0; i < 8; i++)

@@ -19,6 +19,7 @@ package com.zebraviews.reviews;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
@@ -43,7 +44,10 @@ public class PriorityList {
 	private final static String SCRAPER_SUFFIX = "Scraper";
 	private final static int MINIMUM_SIZE = 16;
 	
-	public PriorityList() {
+	private InputStream readFile;
+	
+	public PriorityList(InputStream readFile) {
+		this.readFile = readFile;
 		Document scraperDoc = this.inflateList();
 		this.fillScraperPool(scraperDoc);
 	}
@@ -62,13 +66,13 @@ public class PriorityList {
 		}
 		Document priority = null;
 		try {
-			priority = priorityBuilder.parse
-					(new File("XML/priority_list.xml"));
+			priority = priorityBuilder.parse(this.readFile);
 		} catch (SAXException e) {
 			System.out.println("SAX Exception");
 			// TODO Add error handling...
 		} catch (IOException e) {
 			System.out.println("IO Exception");
+			System.out.println(e.getMessage());
 			// TODO Add error handling...
 		}
 		priority.getDocumentElement().normalize();

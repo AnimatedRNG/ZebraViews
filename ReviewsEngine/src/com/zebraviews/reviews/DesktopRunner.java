@@ -17,10 +17,15 @@
 
 package com.zebraviews.reviews;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 
 public class DesktopRunner {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
 		long startTime = System.nanoTime();
 		String upc="9780439420105";
 		AmazonURL address=new AmazonURL(upc);
@@ -30,7 +35,8 @@ public class DesktopRunner {
 		long endTime = System.nanoTime();
 		System.out.println("Took "+(endTime - startTime) + " ns");
 		
-		ReviewsCompiler compiler = new ReviewsCompiler(upc);
+		ReviewsCompiler compiler = new ReviewsCompiler(upc, 
+				new FileInputStream(new File("XML/priority_list.xml")));
 		compiler.activateAll();
 		do
 		{
