@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.zebraviews.reviews.Review;
@@ -42,8 +43,11 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	private float overallRating = 0;
 	private int ratings = 0;
 	
+	private ReviewsManager reviews;
+	
 	private ProgressBar progress;
 	private RatingBar ratingsBar;
+	private TextView titleText;
 	
 	private final static int MINIMUM_REVIEWS = 4;
 	
@@ -52,14 +56,14 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 		super.onActivityCreated(savedInstanceState);
 		String upc = this.getActivity().getIntent().
 				getStringExtra("com.animated.juzzz.zebraviews.BARCODE_TEXT");
-		ReviewsManager downloader = null;
+		this.reviews = null;
 		try {
-			downloader = new ReviewsManager(this, upc,
+			reviews = new ReviewsManager(this, upc,
 					this.getActivity().getAssets().open("XML/priority_list.xml"));
 		} catch (IOException e) {
 			Log.d("Priority Inflation", "No priority list found");
 		}
-		downloader.execute();
+		reviews.execute();
 	}
 
 	@Override
@@ -80,6 +84,8 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 		this.ratingsBar = (RatingBar) total.findViewById(R.id.product_rating);
 		this.ratingsBar.setStepSize(0.1F);
 		
+		this.titleText = (TextView) total.findViewById(R.id.product_title);
+		
 		return total;
 	}
 
@@ -95,6 +101,7 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 		if (this.reviewList.size() == ReviewsFragment.MINIMUM_REVIEWS)
 		{
 			this.progress.setVisibility(View.GONE);
+			//this.titleText.setText(this.reviews.getProductName());
 			this.getView().findViewById(R.id.product_rating).
 			setVisibility(View.VISIBLE);
 		}
@@ -107,6 +114,7 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	@Override
 	public void onCompletion() {
 		this.progress.setVisibility(View.GONE);
+		//this.titleText.setText(this.reviews.getProductName());
 		this.updateList();
 		this.getView().findViewById(R.id.product_rating).
 		setVisibility(View.VISIBLE);
