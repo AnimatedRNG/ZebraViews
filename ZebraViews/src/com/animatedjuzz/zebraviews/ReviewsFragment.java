@@ -29,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.zebraviews.reviews.Review;
@@ -36,12 +37,15 @@ import com.zebraviews.reviews.ReviewsData;
 
 public class ReviewsFragment extends SherlockFragment implements ReviewsListener {
 
-	private ArrayAdapter<String> adapter;
 	private ArrayList<String> reviewList;
 	
-	private ProgressBar progress;
+	private float overallRating = 0;
+	private int ratings = 0;
 	
-	private final static int MINIMUM_REVIEWS = 8;
+	private ProgressBar progress;
+	private RatingBar ratingsBar;
+	
+	private final static int MINIMUM_REVIEWS = 4;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -65,13 +69,16 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 				container, false);
 		ListView list = (ListView) total.findViewById(R.id.review_list);
 		this.reviewList = new ArrayList<String>();
-		this.adapter = new ArrayAdapter<String>(this.getActivity(),
-				android.R.layout.simple_list_item_1, reviewList);
-		list.setAdapter(this.adapter);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.
+				getActivity(),android.R.layout.simple_list_item_1, reviewList);
+		list.setAdapter(adapter);
 		
 		this.progress = (ProgressBar) 
 				total.findViewById(R.id.review_loading);
 		this.progress.setVisibility(View.VISIBLE);
+		
+		this.ratingsBar = (RatingBar) total.findViewById(R.id.product_rating);
+		this.ratingsBar.setStepSize(0.1F);
 		
 		return total;
 	}
@@ -79,17 +86,30 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	@Override
 	public void onReviewsDataDownloaded(ReviewsData data) {
 		for (Review review : data.getReviews())
+		{
+			this.overallRating += review.getOverallRating();
 			this.reviewList.add(review.toString());
+			this.ratingsBar.setRating((overallRating/((float) ++ratings))
+					/ 2.0F);
+		}
 		if (this.reviewList.size() == ReviewsFragment.MINIMUM_REVIEWS)
+		{
 			this.progress.setVisibility(View.GONE);
+			this.getView().findViewById(R.id.product_rating).
+			setVisibility(View.VISIBLE);
+		}
 		if (this.reviewList.size() >= ReviewsFragment.MINIMUM_REVIEWS)
+		{
 			this.updateList();
+		}
 	}
 
 	@Override
 	public void onCompletion() {
 		this.progress.setVisibility(View.GONE);
 		this.updateList();
+		this.getView().findViewById(R.id.product_rating).
+		setVisibility(View.VISIBLE);
 	}
 	
 	private void updateList() {
