@@ -76,6 +76,7 @@ public class AmazonScraper implements Scraper {
 					Review rev = new Review(review,rating, reviewCount);
 					rev.setTitle(title);
 					rev.setRating(rating);
+					rev.setOverallRating(overallRatingNum);
 
 					this.fetchThread.addReview(rev);
 

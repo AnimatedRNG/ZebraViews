@@ -22,6 +22,7 @@ public class Review {
 	private String review;
 	private String title;
 	private String rating;
+	private int overallRating;
 	private int index;
 	
 	public Review(int index) {
@@ -46,6 +47,10 @@ public class Review {
 		return this.rating;
 	}
 	
+	public int getOverallRating() {
+		return this.overallRating;
+	}
+	
 	public int getIndex() {
 		return this.index;
 	}
@@ -60,6 +65,10 @@ public class Review {
 	
 	public void setRating(int rating) {
 		this.rating = rating+"/10";
+	}
+	
+	public void setOverallRating(int overallRating) {
+		this.overallRating = overallRating;
 	}
 	
 	public void setIndex(int index) {
