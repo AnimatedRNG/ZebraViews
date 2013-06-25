@@ -49,7 +49,7 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	private RatingBar ratingsBar;
 	private TextView titleText;
 	
-	private final static int MINIMUM_REVIEWS = 4;
+	private final static int MINIMUM_REVIEWS = 8;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
