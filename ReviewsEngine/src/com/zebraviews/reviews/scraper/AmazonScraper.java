@@ -47,8 +47,6 @@ public class AmazonScraper implements Scraper {
 			try
 			{
 				Document doc = Jsoup.connect(url).get();
-				//Element prodTitle=doc.select("span#btAsinTitle").first();
-				//System.out.println(prodTitle.text());
 				Element overallRating = doc.select("div.gry.txtnormal.acrrating").first();
 				if(overallRating==null)
 				{	
