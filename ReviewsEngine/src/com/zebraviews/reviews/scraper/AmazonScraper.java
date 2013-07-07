@@ -57,8 +57,8 @@ public class AmazonScraper implements Scraper {
 					this.setCompletion(true);
 					return;
 				}
-				double overallRatingNum = Double.parseDouble(overallRating.text().
-						substring(0,3))*2;
+				int overallRatingNum = Integer.parseInt(overallRating.text().
+						substring(0,1))*2;
 				Elements reviews = doc.select("#revMHRL .mt9.reviewtext");
 				Elements titles = doc.select("#revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
 				Elements ratings = doc.select("div.mt4.ttl");
@@ -68,7 +68,7 @@ public class AmazonScraper implements Scraper {
 					String review = reviews.get(this.reviewCount).text();
 					int rating = (int) (2 * Double.parseDouble(ratings.get
 							(reviewCount).text().substring(0, 3)));
-					review = review.replace("Read more ›", "");
+					review = review.replace("Read more ï¿½", "");
 
 					// Amazon's reviews are out of 5
 					Review rev = new Review(review,rating, reviewCount);
