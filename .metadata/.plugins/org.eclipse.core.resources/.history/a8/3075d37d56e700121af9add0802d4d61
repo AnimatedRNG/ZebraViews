@@ -59,6 +59,7 @@ public class AmazonScraper implements Scraper {
 				}
 				double overallRatingNum = Double.parseDouble(overallRating.text().
 						substring(0,3))*2;
+				System.out.println(overallRatingNum);
 				Elements reviews = doc.select("#revMHRL .mt9.reviewtext");
 				Elements titles = doc.select("#revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
 				Elements ratings = doc.select("div.mt4.ttl");
