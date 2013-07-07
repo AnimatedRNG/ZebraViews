@@ -22,7 +22,7 @@ public class Review {
 	private String review;
 	private String title;
 	private String rating;
-	private int overallRating;
+	private double overallRating;
 	private int index;
 	
 	public Review(int index) {
@@ -47,7 +47,7 @@ public class Review {
 		return this.rating;
 	}
 	
-	public int getOverallRating() {
+	public double getOverallRating() {
 		return this.overallRating;
 	}
 	
@@ -67,7 +67,7 @@ public class Review {
 		this.rating = rating+"/10";
 	}
 	
-	public void setOverallRating(int overallRating) {
+	public void setOverallRating(double overallRating) {
 		this.overallRating = overallRating;
 	}
 	
