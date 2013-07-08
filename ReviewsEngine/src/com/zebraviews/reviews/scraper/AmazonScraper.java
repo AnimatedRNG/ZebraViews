@@ -47,7 +47,7 @@ public class AmazonScraper implements Scraper {
 			try
 			{
 				Document doc = Jsoup.connect(url).get();
-				Element overallRating = doc.select("div.gry.txtnormal.acrrating").first();
+				Element overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
 				if(overallRating==null)
 				{	
 					Review rev= new Review("No reviews found", 0, reviewCount);
