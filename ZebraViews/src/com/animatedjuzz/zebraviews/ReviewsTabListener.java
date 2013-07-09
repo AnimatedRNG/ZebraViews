@@ -48,14 +48,14 @@ public class ReviewsTabListener<T extends SherlockFragment> implements TabListen
             		(mActivity, mClass.getName());
             ft.add(android.R.id.content, mFragment, mTag);
         } else {
-            ft.attach(mFragment);
+        	ft.show(mFragment);
         }
 	}
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		if (mFragment != null) {
-            ft.detach(mFragment);
+			ft.hide(mFragment);
         }
 	}
 
