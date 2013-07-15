@@ -36,6 +36,7 @@ public class ScannerActivity extends CaptureActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scanner_screen_layout);
+        getSupportActionBar().setHomeButtonEnabled(false);
     }
     
     @Override 
