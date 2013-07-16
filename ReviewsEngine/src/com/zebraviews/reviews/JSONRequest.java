@@ -75,4 +75,39 @@ public abstract class JSONRequest {
 		
 		return result;
 	}
+	
+	// Returns JSONObject response if successful, null otherwise
+	public static JSONObject postRequestWithResponse(String request, String structure) {
+		
+		HttpClient httpClient = new DefaultHttpClient();
+		InputStream inputStream;
+		
+		try {
+			HttpPost httprequest = new HttpPost();
+			StringEntity params = new StringEntity(structure);
+			httprequest.setURI(new URI(request));
+			httprequest.addHeader
+				("content-type", "application/x-www-form-urlencoded");
+			httprequest.setEntity(params);
+			HttpResponse response = httpClient.execute(httprequest);
+			inputStream = response.getEntity().getContent();
+		} catch (IOException e) {
+			return null;
+		} catch (URISyntaxException e) {
+			return null;
+		} finally {
+			httpClient.getConnectionManager().shutdown();
+		}
+		
+		JSONObject jsonData = null;
+		try {
+			jsonData = (JSONObject) JSONValue.parseWithException(inputStream);
+		} catch (IOException e) {
+			return null;
+		} catch (ParseException e) {
+			return null;
+		}
+		
+		return jsonData;
+	}
 }
