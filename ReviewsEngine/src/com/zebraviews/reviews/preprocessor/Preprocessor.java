@@ -3,15 +3,15 @@ package com.zebraviews.reviews.preprocessor;
 public abstract class Preprocessor implements Runnable {
 	
 	private boolean simulataneous;
-	private boolean initialized;
+	private boolean running;
 	private PreprocessingData data;
 	
 	@Override
 	public void run() {
-		if (!initialized)
-			return;
 		while (!Thread.interrupted())
 		{
+			if (!running)
+				return;
 			if (simulataneous)
 				this.onSimultaneousExecute();
 			else
@@ -21,12 +21,12 @@ public abstract class Preprocessor implements Runnable {
 
 	public void init(boolean simultaneous) {
 		this.simulataneous = simultaneous;
-		this.initialized = true;
+		this.running = true;
 		this.setPreprocessingData(new PreprocessingData());
 	}
 	
 	public PreprocessingData getPreprocessingData() {
-		if (this.initialized)
+		if (this.running)
 			return this.data;
 		else
 			return null;
@@ -34,6 +34,10 @@ public abstract class Preprocessor implements Runnable {
 
 	public void setPreprocessingData(PreprocessingData data) {
 		this.data = data;
+	}
+	
+	public void done() {
+		this.running = false;
 	}
 
 	// Write simultaneously executing code with this
