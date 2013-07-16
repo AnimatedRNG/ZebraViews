@@ -44,9 +44,9 @@ public class LabelApiURI {
 		return "http://api.foodessentials.com/productscore?u=" + upc + "&sid=" + sid + "&f=json&api_key=" + apiKey;
 	}
 
-	public static String getLabelURI(String upc, String sid, String appid, String longitude, String lattitude, String apiKey){
-		return "http://api.foodessentials.com/label?u=" + upc + "&sessid=" + sid + "&appid=" + appid + "&f=json&long="
-		+ longitude + "&lat=" + lattitude + "&api_key=" + apiKey;
+	public static String getLabelURI(String upc, String sid, String apiKey){
+		return "http://api.foodessentials.com/label?u=" + upc + "&sessid=" + sid + "&appid=" +
+		"ZebraViews&f=json&api_key=" + apiKey;
 	}
 	
 	public static String getLabelArrayURI(String upc, String sid, String numberOfItems, String startOffset, String apiKey){
@@ -54,9 +54,9 @@ public class LabelApiURI {
 		startOffset + "&f=json&api_key=" + apiKey;
 	}
 	
-	public static String getLabelSummaryURI(String upc, String sid, String appid, String longitude, String lattitude, String apiKey){
-		return "http://api.foodessentials.com/label_summary?u=" + upc + "&sid=" + sid + "&appid=" + appid + "&f=json&long="
-		+ longitude + "&lat=" + lattitude + "&api_key=" + apiKey;
+	public static String getLabelSummaryURI(String upc, String sid, String longitude, String latitude, String apiKey){
+		return "http://api.foodessentials.com/label_summary?u=" + upc + "&sid=" + sid + "&appid=" +
+		"ZebraViews&f=json&api_key=" + apiKey;
 	}
 	/* Property must be equal to the allergen or additive exactly as it is spelt; propertyType must be "allergen" or "additive" */
 	public static String getGetAllergenAdditiveURI(String upc, String sid, String property, String propertyType, String apiKey){
