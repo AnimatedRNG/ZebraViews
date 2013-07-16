@@ -118,7 +118,7 @@ public class LabelAPI {
 		try {
 			URL label = new URL(request);
 			HttpURLConnection connection = (HttpURLConnection) label.openConnection();
-			connection.setRequestMethod("POST");
+			connection.setRequestMethod("GET");
 		    connection.setRequestProperty("Content-Type","application/json");
 		    connection.setUseCaches(false);
 		    inputStream = connection.getInputStream();
