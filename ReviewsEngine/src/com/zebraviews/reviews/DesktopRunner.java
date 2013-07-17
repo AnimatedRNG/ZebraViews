@@ -22,11 +22,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import net.minidev.json.JSONObject;
+
 
 public class DesktopRunner {
 
 	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
-		long startTime = System.nanoTime();
+		/*long startTime = System.nanoTime();
 		String upc="9780439420105";
 		AmazonURL address=new AmazonURL(upc);
 		address.generateURL();
@@ -43,7 +45,20 @@ public class DesktopRunner {
 			for (Review r : compiler.executePartially().getReviews()) {
 				System.out.println(r);
 			}
-		} while (!compiler.isComplete());
+		} while (!compiler.isComplete());*/
+		String apiKey = "r3epxkdjfejz6b6cavxtpxth";
+		JSONObject object = LabelAPI.createSession(LabelApiURI.getCreateSessionURI(apiKey));
+		String sessionID = (String) object.get("session_id");
+		JSONObject object2 = LabelAPI.getProfile(LabelApiURI.getGetProfileURI(sessionID,apiKey));
+		System.out.println(object2.toJSONString());
+		JSONObject object3 = LabelAPI.setProfile(LabelApiURI.getSetProfileURI(sessionID,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,apiKey));
+		System.out.println(object3.toJSONString());
+		System.out.println(LabelAPI.getProfile(LabelApiURI.getGetProfileURI(sessionID,apiKey)).toJSONString());
+		JSONObject object4 = LabelAPI.getLabel(LabelApiURI.getLabelURI("016000409958",sessionID,apiKey));
+		System.out.println(object4.toJSONString());
+		JSONObject object5 = LabelAPI.getSimilarFoods(LabelApiURI.getLabelArrayURI("016000409958",sessionID,"10","0",apiKey));
+		System.out.println(object5.toJSONString());
+		
 	}
 
 }
