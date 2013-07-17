@@ -19,10 +19,10 @@ public abstract class Preprocessor implements Runnable {
 		}
 	}
 
-	public void init(boolean simultaneous) {
+	public void init(boolean simultaneous, String dataName) {
 		this.simulataneous = simultaneous;
 		this.running = true;
-		this.setPreprocessingData(new PreprocessingData());
+		this.setPreprocessingData(new PreprocessingData(dataName));
 	}
 	
 	public PreprocessingData getPreprocessingData() {
