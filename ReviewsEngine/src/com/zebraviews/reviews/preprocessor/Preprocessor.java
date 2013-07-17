@@ -1,10 +1,12 @@
 package com.zebraviews.reviews.preprocessor;
 
+import com.zebraviews.reviews.PreprocessorFetchThread;
+
 public abstract class Preprocessor implements Runnable {
 	
-	private boolean simulataneous;
 	private boolean running;
 	private PreprocessingData data;
+	private PreprocessorFetchThread fetchThread;
 	
 	@Override
 	public void run() {
@@ -12,15 +14,12 @@ public abstract class Preprocessor implements Runnable {
 		{
 			if (!running)
 				return;
-			if (simulataneous)
-				this.onSimultaneousExecute();
-			else
-				this.onPreExecute();	
+			this.onSimultaneousExecute();
+			this.onPreExecute();
 		}
 	}
 
-	public void init(boolean simultaneous, String dataName) {
-		this.simulataneous = simultaneous;
+	public void init(String dataName) {
 		this.running = true;
 		this.setPreprocessingData(new PreprocessingData(dataName));
 	}
@@ -36,6 +35,15 @@ public abstract class Preprocessor implements Runnable {
 		this.data = data;
 	}
 	
+	// Deprecated for obvious reasons
+	public PreprocessorFetchThread getFetchThread() {
+		return this.fetchThread;
+	}
+
+	public void setFetchThread(PreprocessorFetchThread fetchThread) {
+		this.fetchThread = fetchThread;
+	}
+
 	public void done() {
 		this.running = false;
 	}
@@ -47,4 +55,7 @@ public abstract class Preprocessor implements Runnable {
 	// Write pre-execution code with this
 	// Save data every execute in PreprocessingData object
 	public abstract void onPreExecute();
+	
+	// What do you want to call the data object?
+	public abstract String getPreprocessingDataName();
 }
