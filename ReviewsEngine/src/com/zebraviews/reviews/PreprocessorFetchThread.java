@@ -8,14 +8,12 @@ import com.zebraviews.reviews.preprocessor.Preprocessor;
 
 public class PreprocessorFetchThread extends Thread {
 
-	private Queue<PreprocessingData> preprocessingData;
 	private Preprocessor preprocessor;
 	private ReviewsCompiler compiler;
 	
 	public PreprocessorFetchThread(ReviewsCompiler compiler, 
 			Preprocessor preprocessor) {
 		super(preprocessor);
-		this.preprocessingData = new LinkedList<PreprocessingData>();
 		this.preprocessor = preprocessor;
 		this.setCompiler(compiler);
 	}
@@ -43,18 +41,9 @@ public class PreprocessorFetchThread extends Thread {
 		}
 	}
 	
-	public void addPreprocessingData(PreprocessingData data) {
-		if (this.preprocessingData == null)
-			this.preprocessingData = new LinkedList<PreprocessingData>();
-		this.preprocessingData.add(data);
-	}
-	
-	public boolean hasPreprocessingData() {
-		return !this.preprocessingData.isEmpty();
-	}
-	
-	public PreprocessingData retrievePreprocessingData() {
-		return this.preprocessingData.poll();
+	// Get this before interrupting
+	public Preprocessor getPreprocessor() {
+		return this.preprocessor;
 	}
 
 	public ReviewsCompiler getCompiler() {
