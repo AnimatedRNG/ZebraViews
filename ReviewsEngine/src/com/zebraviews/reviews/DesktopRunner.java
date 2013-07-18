@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 
@@ -46,19 +48,23 @@ public class DesktopRunner {
 				System.out.println(r);
 			}
 		} while (!compiler.isComplete());*/
-		String apiKey = "r3epxkdjfejz6b6cavxtpxth";
-		JSONObject object = LabelAPI.createSession(LabelApiURI.getCreateSessionURI(apiKey));
+		String apiKey = "r3epxkdjfejz6bxtpxth";
+		LabelApiURI requests = new LabelApiURI("016000409958", "r3epxkdjfejz6b6cavxtpxth");
+		JSONObject object = LabelAPI.createSession(requests.getCreateSessionURI());
 		String sessionID = (String) object.get("session_id");
-		JSONObject object2 = LabelAPI.getProfile(LabelApiURI.getGetProfileURI(sessionID,apiKey));
-		System.out.println(object2.toJSONString());
-		JSONObject object3 = LabelAPI.setProfile(LabelApiURI.getSetProfileURI(sessionID,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,apiKey));
-		System.out.println(object3.toJSONString());
-		System.out.println(LabelAPI.getProfile(LabelApiURI.getGetProfileURI(sessionID,apiKey)).toJSONString());
-		JSONObject object4 = LabelAPI.getLabel(LabelApiURI.getLabelURI("016000409958",sessionID,apiKey));
-		System.out.println(object4.toJSONString());
-		JSONObject object5 = LabelAPI.getSimilarFoods(LabelApiURI.getLabelArrayURI("016000409958",sessionID,"10","0",apiKey));
-		System.out.println(object5.toJSONString());
-		
+		JSONArray results = (JSONArray) JSONRequest.getRequest(requests.getLabelArrayURI(sessionID, "10", "0")).get("productsArray");
+		for(int i = 0; i<results.size(); i++)
+		{
+			System.out.println(((JSONObject) results.get(i)).get("product_name"));
+			JSONArray allergenResults = ((JSONArray) ((JSONObject)results.get(i)).get("allergens"));
+			for(int j=0; j<15; j++)
+			{
+				if(((JSONObject) allergenResults.get(j)).get("allergen_value").equals("2"))
+				{
+					System.out.println("\t Contains: "+ ((JSONObject) allergenResults.get(j)).get("allergen_name"));
+				}
+					
+			}
+		}		
 	}
-
 }
