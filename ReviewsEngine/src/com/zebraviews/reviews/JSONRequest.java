@@ -76,6 +76,36 @@ public abstract class JSONRequest {
 		return result;
 	}
 	
+	public static JSONObject postRequestWithoutStructure(String request)
+	{
+		InputStream inputStream = null;
+		
+		try {
+			URL url = new URL(request);
+			HttpURLConnection connection = (HttpURLConnection)
+					url.openConnection();
+			connection.setRequestMethod("GET");
+		    connection.setRequestProperty("Content-Type","application/json");
+		    connection.setUseCaches(false);
+		    inputStream = connection.getInputStream();
+ 		} catch (ClientProtocolException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+		
+		JSONObject jsonData = null;
+		try {
+			jsonData = (JSONObject) JSONValue.parseWithException(inputStream);
+		} catch (IOException e) {
+			return null;
+		} catch (ParseException e) {
+			return null;
+		}
+		
+		return jsonData;	
+	}
+	
 	// Returns JSONObject response if successful, null otherwise
 	public static JSONObject postRequestWithResponse(String request, String structure) {
 		
