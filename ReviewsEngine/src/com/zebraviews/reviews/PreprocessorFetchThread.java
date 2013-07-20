@@ -1,9 +1,5 @@
 package com.zebraviews.reviews;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
-import com.zebraviews.reviews.preprocessor.PreprocessingData;
 import com.zebraviews.reviews.preprocessor.Preprocessor;
 
 public class PreprocessorFetchThread extends Thread {
