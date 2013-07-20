@@ -1,21 +1,18 @@
 package com.zebraviews.reviews.preprocessor;
 
-import java.util.ArrayList;
-
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.zebraviews.reviews.JSONRequest;
-import com.zebraviews.reviews.LabelApiProduct;
 import com.zebraviews.reviews.LabelApiURI;
-import com.zebraviews.reviews.ReviewFetchThread;
+import com.zebraviews.reviews.PreprocessorFetchThread;
 
 public class LabelApiPreprocessor extends Preprocessor{
 
 	public static final String API_KEY = "r3epxkdjfejz6b6cavxtpxth";
 	public static final String DATA_NAME = "LabelAPI"; 
 	
-	private ReviewFetchThread fetchThread;
+	private PreprocessorFetchThread fetchThread;
 	
 	@Override
 	public void onSimultaneousExecute() {
@@ -25,8 +22,7 @@ public class LabelApiPreprocessor extends Preprocessor{
 	@Override
 	public void onPreExecute() {
 		String product = "";
-		//String upc = this.fetchThread.getReviewsCompiler().getUPC();
-		String upc = "016000409958";
+		String upc = this.fetchThread.getCompiler().getUPC();
 		LabelApiURI requestGenerator = 
 				new LabelApiURI(upc, API_KEY);
 		String sessionID = (String) 
@@ -39,28 +35,33 @@ public class LabelApiPreprocessor extends Preprocessor{
 						true, true));
 		JSONArray results = (JSONArray) JSONRequest.
 				getRequest(requestGenerator.
-						getLabelArrayURI(sessionID, "10", "0")).
+						getLabelArrayURI(sessionID, "1", "0")).
 						get("productsArray");
-		for(int i = 0; i < results.size(); i++){
-			product = (((JSONObject) results.get(i)).
-					get("product_name")).toString();
-			ArrayList <String> allergens = new ArrayList<String>();
-			JSONArray allergenResults = ((JSONArray)
-					((JSONObject) results.get(i)).get("allergens"));
-			for (int j = 0; j < 15; j++){
-				if(((JSONObject) allergenResults.get(j)).
-						get("allergen_value").equals("2")) {
-					allergens.add(((String)((JSONObject) allergenResults.
-							get(j)).get("allergen_name")));
+		//for(int i = 0; i < results.size(); i++){
+		product = (((JSONObject) results.get(0)).
+				get("product_name")).toString();
+		String allergens = "";
+		JSONArray allergenResults = ((JSONArray)
+				((JSONObject) results.get(0)).get("allergens"));
+		for (int j = 0; j < 15; j++) {
+			if(((JSONObject) allergenResults.get(j)).
+					get("allergen_value").equals("2")) {
+				allergens += (((String)((JSONObject) allergenResults.
+						get(j)).get("allergen_name")).replace(" ", "_")) + " ";
 				}
 			}
-			// Add hashmap entry ("allergens", "nuts gluten etc")
-			// Use space as delimiter
+		System.out.println(allergens);
+		this.getPreprocessingData().put("allergens", allergens);
 		}
-	}
 
 	@Override
 	public String getPreprocessingDataName() {
 		return LabelApiPreprocessor.DATA_NAME;
+	}
+
+
+	public static void main(String[] args) {
+		LabelApiPreprocessor test = new LabelApiPreprocessor();
+		test.onPreExecute();
 	}
 }
