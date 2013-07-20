@@ -31,6 +31,7 @@ public class ReviewsCompiler {
 	private List<ReviewFetchThread> fetchers;
 	private PriorityList priorityList;
 	private String upc;
+	private boolean prexecuting;
 	
 	public ReviewsCompiler(String upc, InputStream priorityListFile) {
 		fetchers = new ArrayList<ReviewFetchThread>();
@@ -75,6 +76,10 @@ public class ReviewsCompiler {
 		}
 		else
 			return false;
+	}
+	
+	public boolean isPrexecuting() {
+		return this.prexecuting;
 	}
 	
 	public String getUPC()
