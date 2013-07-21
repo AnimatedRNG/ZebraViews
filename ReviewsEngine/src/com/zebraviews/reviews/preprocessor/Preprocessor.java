@@ -8,14 +8,19 @@ public abstract class Preprocessor implements Runnable {
 	private PreprocessingData data;
 	private PreprocessorFetchThread fetchThread;
 	
+	protected final static String DELIMITER = "/#)(%^#/";
+	
 	@Override
 	public void run() {
 		while (!Thread.interrupted())
 		{
 			if (!running)
 				return;
-			this.onSimultaneousExecute();
-			this.onPreExecute();
+			
+			if (!this.getFetchThread().getCompiler().isPrexecuting())
+				this.onSimultaneousExecute();
+			else
+				this.onPreExecute();
 		}
 	}
 
@@ -46,6 +51,10 @@ public abstract class Preprocessor implements Runnable {
 
 	public void done() {
 		this.running = false;
+	}
+	
+	public void resume() {
+		this.running = true;
 	}
 
 	// Write simultaneously executing code with this
