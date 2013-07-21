@@ -37,7 +37,6 @@ public class LabelApiPreprocessor extends Preprocessor{
 				getRequest(requestGenerator.
 						getLabelArrayURI(sessionID, "1", "0")).
 						get("productsArray");
-		//for(int i = 0; i < results.size(); i++){
 		product = (((JSONObject) results.get(0)).
 				get("product_name")).toString();
 		String allergens = "";
@@ -48,20 +47,13 @@ public class LabelApiPreprocessor extends Preprocessor{
 					get("allergen_value").equals("2")) {
 				allergens += (((String)((JSONObject) allergenResults.
 						get(j)).get("allergen_name")).replace(" ", "_")) + " ";
-				}
 			}
-		System.out.println(allergens);
-		this.getPreprocessingData().put("allergens", allergens);
 		}
+		this.getPreprocessingData().put("allergens", allergens);
+	}
 
 	@Override
 	public String getPreprocessingDataName() {
 		return LabelApiPreprocessor.DATA_NAME;
-	}
-
-
-	public static void main(String[] args) {
-		LabelApiPreprocessor test = new LabelApiPreprocessor();
-		test.onPreExecute();
 	}
 }
