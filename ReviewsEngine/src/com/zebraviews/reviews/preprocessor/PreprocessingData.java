@@ -3,7 +3,7 @@ package com.zebraviews.reviews.preprocessor;
 import java.util.HashMap;
 
 // More to come soon
-public class PreprocessingData extends HashMap<String, String> {
+public class PreprocessingData extends HashMap<String, String> implements Comparable<PreprocessingData> {
 
 	private String name;
 	
@@ -15,5 +15,10 @@ public class PreprocessingData extends HashMap<String, String> {
 	
 	public String getName() {
 		return this.name;
+	}
+
+	@Override
+	public int compareTo(PreprocessingData o) {
+		return this.getName().compareTo(o.getName());
 	}
 }
