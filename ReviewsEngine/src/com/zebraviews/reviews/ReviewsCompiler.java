@@ -21,6 +21,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zebraviews.reviews.preprocessor.AmazonPreprocessor;
+import com.zebraviews.reviews.preprocessor.GooglePreprocessor;
+import com.zebraviews.reviews.preprocessor.LabelApiPreprocessor;
+import com.zebraviews.reviews.preprocessor.Preprocessor;
 import com.zebraviews.reviews.scraper.Scraper;
 
 public class ReviewsCompiler {
@@ -29,12 +33,14 @@ public class ReviewsCompiler {
 	public final static long POLL_TIME = 100;
 	
 	private List<ReviewFetchThread> fetchers;
+	private List<PreprocessorFetchThread> preprocessorfetchers;
 	private PriorityList priorityList;
 	private String upc;
 	private boolean prexecuting;
 	
 	public ReviewsCompiler(String upc, InputStream priorityListFile) {
 		fetchers = new ArrayList<ReviewFetchThread>();
+		preprocessorfetchers = new ArrayList<PreprocessorFetchThread>();
 		priorityList = new PriorityList(priorityListFile);
 		this.upc = upc;
 		
@@ -46,9 +52,38 @@ public class ReviewsCompiler {
 			else
 				fetchers.add(new ReviewFetchThread(this, poolScraper));
 		}
+		
+		this.prexecuting = true;
+		GooglePreprocessor google = new GooglePreprocessor();
+		LabelApiPreprocessor labelAPI = new LabelApiPreprocessor();
+		AmazonPreprocessor amazon = new AmazonPreprocessor();
+		preprocessorfetchers.add(new PreprocessorFetchThread(this, google));
+		preprocessorfetchers.add(new PreprocessorFetchThread(this, labelAPI));
+		preprocessorfetchers.add(new PreprocessorFetchThread(this, amazon));
 	}
 	
 	public void activateAll() {
+		
+		for (PreprocessorFetchThread fetch : preprocessorfetchers)
+		{
+			fetch.setCompiler(this);
+			fetch.activate();
+		}
+		
+		boolean alive = true;
+		
+		while (alive)
+		{
+			alive = false;
+			for (PreprocessorFetchThread fetch : preprocessorfetchers)
+			{
+				if (fetch.isAlive())
+					alive = true;
+			}
+		}
+		
+		this.prexecuting = false;
+		
 		for (ReviewFetchThread r : fetchers)
 			r.activate();
 	}
