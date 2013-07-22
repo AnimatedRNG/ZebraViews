@@ -21,6 +21,7 @@ public class AmazonPreprocessor extends Preprocessor{
 	@Override
 	public void onPreExecute() {
 		Element description = null;
+		Element productName = null;
 		AmazonURL address = new AmazonURL(this.getFetchThread().
 				getCompiler().getUPC());
 		address.generateURL();
@@ -31,18 +32,19 @@ public class AmazonPreprocessor extends Preprocessor{
 			{
 				Document doc = Jsoup.connect(url).get();
 				description = doc.select("#postBodyPS").first();
+				productName = doc.select(".buying span[id=btAsinTitle]").first();
 				if (description == null) 
 					description = doc.select(".content .productdescriptionwrapper").first();
 				if (description == null)
 					description = doc.select(".aplus").first();
-				if (description == null)
-					return;
 			}
 			catch (IOException e) {
 			}
 		}
 		if (!this.getPreprocessingData().containsKey("description") && description != null)
 			this.getPreprocessingData().put("description", description.text());
+		if (!this.getPreprocessingData().containsKey("name") && productName != null)
+			this.getPreprocessingData().put("name", productName.text());
 		this.done();
 	}
 
