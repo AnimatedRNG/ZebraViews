@@ -5,24 +5,21 @@ import net.minidev.json.JSONObject;
 
 import com.zebraviews.reviews.JSONRequest;
 import com.zebraviews.reviews.LabelApiURI;
-import com.zebraviews.reviews.PreprocessorFetchThread;
 
-public class LabelApiPreprocessor extends Preprocessor{
+public class LabelApiPreprocessor extends Preprocessor {
 
 	public static final String API_KEY = "r3epxkdjfejz6b6cavxtpxth";
 	public static final String DATA_NAME = "LabelAPI"; 
 	
-	private PreprocessorFetchThread fetchThread;
-	
 	@Override
 	public void onSimultaneousExecute() {
-		// TODO Auto-generated method stub		
+		
 	}
 
 	@Override
 	public void onPreExecute() {
-		String product = "";
-		String upc = this.fetchThread.getCompiler().getUPC();
+		String product = new String();
+		String upc = this.getFetchThread().getCompiler().getUPC();
 		LabelApiURI requestGenerator = 
 				new LabelApiURI(upc, API_KEY);
 		String sessionID = (String) 
@@ -50,6 +47,8 @@ public class LabelApiPreprocessor extends Preprocessor{
 			}
 		}
 		this.getPreprocessingData().put("allergens", allergens);
+		this.getPreprocessingData().put("title", product);
+		this.done();
 	}
 
 	@Override

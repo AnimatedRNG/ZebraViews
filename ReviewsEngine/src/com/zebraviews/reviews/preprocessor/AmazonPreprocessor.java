@@ -12,7 +12,6 @@ import com.zebraviews.reviews.PreprocessorFetchThread;
 public class AmazonPreprocessor extends Preprocessor{
 
 	private final static String DATA_NAME = "Amazon";
-	private PreprocessorFetchThread fetchThread;
 	
 	@Override
 	public void onSimultaneousExecute() {
@@ -22,7 +21,7 @@ public class AmazonPreprocessor extends Preprocessor{
 	@Override
 	public void onPreExecute() {
 		Element description = null;
-		AmazonURL address = new AmazonURL(this.fetchThread.
+		AmazonURL address = new AmazonURL(this.getFetchThread().
 				getCompiler().getUPC());
 		address.generateURL();
 		String url = address.getURL();
@@ -38,20 +37,17 @@ public class AmazonPreprocessor extends Preprocessor{
 					description = doc.select(".aplus").first();
 				if (description == null)
 					return;
-				System.out.println(description.text());
 			}
 			catch (IOException e) {
 			}
 		}
-		this.getPreprocessingData().put("description", description.text());
+		if (!this.getPreprocessingData().containsKey("description") && description != null)
+			this.getPreprocessingData().put("description", description.text());
+		this.done();
 	}
 
 	@Override
 	public String getPreprocessingDataName() {
 		return AmazonPreprocessor.DATA_NAME;
-	}
-	public static void main(String[] args) {
-		AmazonPreprocessor test = new AmazonPreprocessor();
-		test.onPreExecute();
 	}
 }
