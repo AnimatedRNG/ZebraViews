@@ -30,7 +30,7 @@ import net.minidev.json.JSONObject;
 public class DesktopRunner {
 
 	public static void main(String[] args) throws InterruptedException, FileNotFoundException {
-		/*long startTime = System.nanoTime();
+		long startTime = System.nanoTime();
 		String upc="9780439420105";
 		AmazonURL address=new AmazonURL(upc);
 		address.generateURL();
@@ -47,8 +47,8 @@ public class DesktopRunner {
 			for (Review r : compiler.executePartially().getReviews()) {
 				System.out.println(r);
 			}
-		} while (!compiler.isComplete());*/
-		String apiKey = "r3epxkdjfejz6bxtpxth";
+		} while (!compiler.isComplete());
+		/*String apiKey = "r3epxkdjfejz6bxtpxth";
 		LabelApiURI requests = new LabelApiURI("016000409958", "r3epxkdjfejz6b6cavxtpxth");
 		JSONObject object = LabelAPI.createSession(requests.getCreateSessionURI());
 		String sessionID = (String) object.get("session_id");
@@ -65,6 +65,6 @@ public class DesktopRunner {
 				}
 					
 			}
-		}		
+		}		*/
 	}
 }
