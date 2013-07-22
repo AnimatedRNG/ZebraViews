@@ -53,10 +53,4 @@ public class GooglePreprocessor extends Preprocessor {
 	public String getPreprocessingDataName() {
 		return GooglePreprocessor.DATA_NAME;
 	}
-
-	public static void main(String[] args) { 
-		GooglePreprocessor goog = new GooglePreprocessor();
-		goog.init(DATA_NAME);
-		goog.onPreExecute();
-	}
 }
