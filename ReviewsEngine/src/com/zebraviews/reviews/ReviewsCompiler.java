@@ -24,6 +24,7 @@ import java.util.List;
 import com.zebraviews.reviews.preprocessor.AmazonPreprocessor;
 import com.zebraviews.reviews.preprocessor.GooglePreprocessor;
 import com.zebraviews.reviews.preprocessor.LabelApiPreprocessor;
+import com.zebraviews.reviews.preprocessor.PreprocessingData;
 import com.zebraviews.reviews.preprocessor.Preprocessor;
 import com.zebraviews.reviews.scraper.Scraper;
 
@@ -84,6 +85,12 @@ public class ReviewsCompiler {
 		
 		this.prexecuting = false;
 		
+		/*for (PreprocessorFetchThread fetch : preprocessorfetchers)
+		{
+			fetch.getPreprocessor().resume();
+			fetch.activate();
+		}*/
+		
 		for (ReviewFetchThread r : fetchers)
 			r.activate();
 	}
@@ -115,6 +122,14 @@ public class ReviewsCompiler {
 	
 	public boolean isPrexecuting() {
 		return this.prexecuting;
+	}
+	
+	public ArrayList<PreprocessingData> retrievePreprocessingData() {
+		ArrayList<PreprocessingData> returnList = 
+				new ArrayList<PreprocessingData>();
+		for (PreprocessorFetchThread fetch : this.preprocessorfetchers)
+			returnList.add(fetch.getPreprocessor().getPreprocessingData());
+		return returnList;
 	}
 	
 	public String getUPC()
