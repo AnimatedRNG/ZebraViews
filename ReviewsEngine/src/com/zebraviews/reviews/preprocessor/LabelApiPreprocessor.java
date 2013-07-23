@@ -38,15 +38,15 @@ public class LabelApiPreprocessor extends Preprocessor {
 					getSetProfileURI(sessionID, true, true, true, true, true,
 							true, true, true, true, true, true, true ,true,
 							true, true));
-			JSONArray results = (JSONArray) JSONRequest.
+			JSONObject results = (JSONObject) JSONRequest.
 					getRequest(requestGenerator.
-							getLabelArrayURI(sessionID, "1", "0")).
+							getLabelURI(sessionID)).
 							get("productsArray");
-			product = (((JSONObject) results.get(0)).
+			product = (((JSONObject) results).
 					get("product_name")).toString();
 			String allergens = "";
 			JSONArray allergenResults = ((JSONArray)
-					((JSONObject) results.get(0)).get("allergens"));
+					((JSONObject) results).get("allergens"));
 			for (int j = 0; j < 15; j++)
 			{
 				if((((JSONObject) allergenResults.get(j)).get("allergen_value").equals("2"))
