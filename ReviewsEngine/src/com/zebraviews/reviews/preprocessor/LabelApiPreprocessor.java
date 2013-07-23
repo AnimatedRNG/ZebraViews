@@ -24,8 +24,12 @@ public class LabelApiPreprocessor extends Preprocessor {
 			String upc = this.getFetchThread().getCompiler().getUPC();
 			LabelApiURI requestGenerator = 
 					new LabelApiURI(upc, API_KEY);
-			if(JSONRequest.getRequest(requestGenerator.getCreateSessionURI())==null)
+			if(JSONRequest.getRequest(
+					requestGenerator.getCreateSessionURI()) == null)
+			{
+				this.done();
 				return;
+			}
 			String sessionID = (String) 
 					JSONRequest.
 					getRequest(requestGenerator.getCreateSessionURI()).
@@ -34,8 +38,12 @@ public class LabelApiPreprocessor extends Preprocessor {
 					getSetProfileURI(sessionID, true, true, true, true, true,
 							true, true, true, true, true, true, true ,true,
 							true, true));
-			if(JSONRequest.getRequest(requestGenerator.getLabelArrayURI(sessionID, "1", "0"))==null)
+			if(JSONRequest.getRequest(requestGenerator.
+					getLabelArrayURI(sessionID, "1", "0"))==null)
+			{
+				this.done();
 				return;
+			}
 			JSONArray results = (JSONArray) JSONRequest.
 					getRequest(requestGenerator.
 							getLabelArrayURI(sessionID, "1", "0")).
@@ -59,6 +67,7 @@ public class LabelApiPreprocessor extends Preprocessor {
 		}
 		catch(Exception e)
 		{
+			this.done();
 			return;
 		}
 	}
