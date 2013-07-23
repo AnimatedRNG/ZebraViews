@@ -38,12 +38,6 @@ public class LabelApiPreprocessor extends Preprocessor {
 					getSetProfileURI(sessionID, true, true, true, true, true,
 							true, true, true, true, true, true, true ,true,
 							true, true));
-			if(JSONRequest.getRequest(requestGenerator.
-					getLabelArrayURI(sessionID, "1", "0"))==null)
-			{
-				this.done();
-				return;
-			}
 			JSONArray results = (JSONArray) JSONRequest.
 					getRequest(requestGenerator.
 							getLabelArrayURI(sessionID, "1", "0")).
