@@ -45,11 +45,12 @@ public class LabelApiPreprocessor extends Preprocessor {
 			String allergens = "";
 			JSONArray allergenResults = ((JSONArray)
 					((JSONObject) results.get(0)).get("allergens"));
-			for (int j = 0; j < 15; j++) {
-				if(((JSONObject) allergenResults.get(j)).
-						get("allergen_value").equals("2")) {
-					allergens += (((String)((JSONObject) allergenResults.
-							get(j)).get("allergen_name")).replace(" ", "_")) + " ";
+			for (int j = 0; j < 15; j++)
+			{
+				if((((JSONObject) allergenResults.get(j)).get("allergen_value").equals("2"))
+						||((((String)((JSONObject) allergenResults.get(j)).get("allergen_name")).equals("Sesame Seeds")&&((JSONObject) allergenResults.get(j)).get("allergen_value").equals("1"))))
+				{
+					allergens += (((String)((JSONObject) allergenResults.get(j)).get("allergen_name")).replace(" ", "_")) + " ";
 				}
 			}
 			this.getPreprocessingData().put("allergens", allergens);
