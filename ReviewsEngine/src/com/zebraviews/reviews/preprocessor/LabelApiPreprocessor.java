@@ -30,18 +30,14 @@ public class LabelApiPreprocessor extends Preprocessor {
 				this.done();
 				return;
 			}
-			String sessionID = (String) 
-					JSONRequest.
-					getRequest(requestGenerator.getCreateSessionURI()).
-					get("session_id");
+			String sessionID = (String) JSONRequest.getRequest(requestGenerator.getCreateSessionURI()).get("session_id");
 			JSONRequest.postRequestWithoutStructure(requestGenerator.
 					getSetProfileURI(sessionID, true, true, true, true, true,
 							true, true, true, true, true, true, true ,true,
 							true, true));
 			JSONObject results = (JSONObject) JSONRequest.
 					getRequest(requestGenerator.
-							getLabelURI(sessionID)).
-							get("productsArray");
+							getLabelURI(sessionID));
 			product = (((JSONObject) results).
 					get("product_name")).toString();
 			String allergens = "";
