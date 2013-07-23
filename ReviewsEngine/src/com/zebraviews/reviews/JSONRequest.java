@@ -84,7 +84,7 @@ public abstract class JSONRequest {
 			URL url = new URL(request);
 			HttpURLConnection connection = (HttpURLConnection)
 					url.openConnection();
-			connection.setRequestMethod("GET");
+			connection.setRequestMethod("POST");
 		    connection.setRequestProperty("Content-Type","application/json");
 		    connection.setUseCaches(false);
 		    inputStream = connection.getInputStream();
