@@ -38,7 +38,6 @@ public class ReviewsCompiler {
 	private List<PreprocessorFetchThread> preprocessorfetchers;
 	private PriorityList priorityList;
 	private String upc;
-	private boolean prexecuting;
 	
 	public ReviewsCompiler(String upc, InputStream priorityListFile) {
 		fetchers = new ArrayList<ReviewFetchThread>();
@@ -55,7 +54,6 @@ public class ReviewsCompiler {
 				fetchers.add(new ReviewFetchThread(this, poolScraper));
 		}
 		
-		this.prexecuting = true;
 		GooglePreprocessor google = new GooglePreprocessor();
 		LabelApiPreprocessor labelAPI = new LabelApiPreprocessor();
 		AmazonPreprocessor amazon = new AmazonPreprocessor();
@@ -83,8 +81,6 @@ public class ReviewsCompiler {
 					alive = true;
 			}
 		}*/
-		
-		//this.prexecuting = false;
 		
 		/*for (PreprocessorFetchThread fetch : preprocessorfetchers)
 		{
@@ -140,18 +136,7 @@ public class ReviewsCompiler {
 		return returnList;
 	}
 	
-	public String getUPC()
-	{
+	public String getUPC() {
 		return this.upc;
-	}
-	
-	public String getProductString()
-	{
-		return null;
-	}
-	
-	public String getAmazonURL()
-	{
-		return null;
 	}
 }
