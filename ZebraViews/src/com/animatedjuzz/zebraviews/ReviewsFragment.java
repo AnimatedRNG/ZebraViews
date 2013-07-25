@@ -101,7 +101,7 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 		if (this.reviewList.size() == ReviewsFragment.MINIMUM_REVIEWS)
 		{
 			this.progress.setVisibility(View.GONE);
-			//this.titleText.setText(this.reviews.getProductName());
+			this.titleText.setText(this.reviews.getProductName());
 			this.getView().findViewById(R.id.product_rating).
 			setVisibility(View.VISIBLE);
 		}
@@ -114,7 +114,7 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	@Override
 	public void onCompletion() {
 		this.progress.setVisibility(View.GONE);
-		//this.titleText.setText(this.reviews.getProductName());
+		this.titleText.setText(this.reviews.getProductName());
 		this.updateList();
 		this.getView().findViewById(R.id.product_rating).
 		setVisibility(View.VISIBLE);

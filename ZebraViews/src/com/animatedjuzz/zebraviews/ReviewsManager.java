@@ -1,9 +1,9 @@
 package com.animatedjuzz.zebraviews;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -15,19 +15,12 @@ import com.zebraviews.reviews.preprocessor.PreprocessingData;
 public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 
 	private ReviewsListener gui;
-	private static String upc;
 	private ReviewsCompiler compiler;
-	private ArrayList<PreprocessingData> preprocessedData;
-	
-	private final static String searchString = "https://www.googleapis.com/" +
-			"shopping/search/v1/public/products?key=" +
-			"AIzaSyDFLBwQFNNxWXkfeJ_sU30XRrdroRmh6TY&country=US" +
-			"&restrictBy=gtin:";
+	private HashMap<String, PreprocessingData> preprocessedData;
 	
 	public ReviewsManager(ReviewsListener gui, String upc, InputStream 
 			priorityListXML) {
-		this.gui = gui; 
-		ReviewsManager.upc = upc;
+		this.gui = gui;
 		this.compiler = new ReviewsCompiler(upc, priorityListXML);
 	}
 	
@@ -60,8 +53,8 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 
 	@Override
 	protected void onPostExecute(Void result) {
-		this.gui.onCompletion();
 		this.preprocessedData = this.compiler.retrievePreprocessingData();
+		this.gui.onCompletion();
 	}
 	
 	// Preferring shortest name
@@ -71,11 +64,15 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 		if (labelAPI != null)
 			return labelAPI;
 		
-		//String amazon = this.getPreprocessedData("Amazon").get("title");
+		String amazon = this.getPreprocessedData("Amazon").get("name");
 		String google = this.getPreprocessedData("Google").get("title");
 		
-		//return (amazon.length() < google.length()) ? amazon : google;
-		return google;
+		if (amazon == null)
+			return google;
+		else if (google == null)
+			return amazon;
+		else
+			return (amazon.length() < google.length()) ? amazon : google;
 	}
 	
 	public String getProductDescription() {
@@ -100,7 +97,6 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 	}
 	
 	public PreprocessingData getPreprocessedData(String name) {
-		return this.preprocessedData.get(Collections.binarySearch(
-				this.preprocessedData, new PreprocessingData(name)));
+		return this.preprocessedData.get(name);
 	}
 }

@@ -39,8 +39,11 @@ public class ReviewsActivity extends SherlockFragmentActivity {
 		ActionBar.Tab reviewsTab = getSupportActionBar().newTab();
 		reviewsTab.setText(R.string.reviews_tab_title);
 		
-		ActionBar.Tab priorSearchesTab = getSupportActionBar().newTab();
-		priorSearchesTab.setText(R.string.previous_searches_title);
+		//ActionBar.Tab priorSearchesTab = getSupportActionBar().newTab();
+		//priorSearchesTab.setText(R.string.previous_searches_title);
+		
+		ActionBar.Tab descriptionTab = getSupportActionBar().newTab();
+		descriptionTab.setText(R.string.description_tab_title);
 		
 		reviewsTab.setTabListener
 		(new ReviewsTabListener<SherlockFragment>
@@ -48,14 +51,21 @@ public class ReviewsActivity extends SherlockFragmentActivity {
 				getResources().getString(R.string.reviews_tab_title),
 				ReviewsFragment.class));
 		
-		priorSearchesTab.setTabListener
+		/*priorSearchesTab.setTabListener
 		(new ReviewsTabListener<SherlockFragment>
 				((SherlockFragmentActivity) this,
 				getResources().getString(R.string.previous_searches_title),
+				PreviousSearchesFragment.class));*/
+		
+		descriptionTab.setTabListener
+		(new ReviewsTabListener<SherlockFragment>
+				((SherlockFragmentActivity) this,
+				getResources().getString(R.string.description_tab_title),
 				PreviousSearchesFragment.class));
 		
 		getSupportActionBar().addTab(reviewsTab);
-		getSupportActionBar().addTab(priorSearchesTab);
+		//getSupportActionBar().addTab(priorSearchesTab);
+		getSupportActionBar().addTab(descriptionTab);
 	}
 
 	@Override

@@ -24,14 +24,6 @@
 	    	android:layout_height="wrap_content"
 	    	android:orientation="horizontal" >
 			
-	        <TextView
-	            android:id="@+id/product_title"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:textStyle="bold"
-	            android:layout_alignParentLeft="true" >
-			</TextView>
-
 	        <RatingBar
 	            android:id="@+id/product_rating"
 	            style = "?android:attr/ratingBarStyleSmall"
@@ -40,6 +32,16 @@
 	            android:focusable="false"
 	            android:visibility="invisible"
 	            android:layout_alignParentRight="true" />
+	        
+	        <TextView
+	            android:id="@+id/product_title"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textStyle="bold"
+	            android:maxLines="1"
+	            android:layout_toLeftOf="@id/product_rating"
+	            android:layout_alignParentLeft="true" >
+			</TextView>
 	        
 	    </RelativeLayout>
 	    

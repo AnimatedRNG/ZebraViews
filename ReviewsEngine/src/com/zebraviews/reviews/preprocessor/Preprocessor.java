@@ -30,10 +30,7 @@ public abstract class Preprocessor implements Runnable {
 	}
 	
 	public PreprocessingData getPreprocessingData() {
-		if (this.running)
-			return this.data;
-		else
-			return null;
+		return this.data;
 	}
 
 	public void setPreprocessingData(PreprocessingData data) {

@@ -19,6 +19,7 @@ package com.zebraviews.reviews;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.zebraviews.reviews.preprocessor.AmazonPreprocessor;
@@ -71,7 +72,7 @@ public class ReviewsCompiler {
 			fetch.activate();
 		}
 		
-		boolean alive = true;
+		/*boolean alive = true;
 		
 		while (alive)
 		{
@@ -81,9 +82,9 @@ public class ReviewsCompiler {
 				if (fetch.isAlive())
 					alive = true;
 			}
-		}
+		}*/
 		
-		this.prexecuting = false;
+		//this.prexecuting = false;
 		
 		/*for (PreprocessorFetchThread fetch : preprocessorfetchers)
 		{
@@ -121,14 +122,21 @@ public class ReviewsCompiler {
 	}
 	
 	public boolean isPrexecuting() {
-		return this.prexecuting;
+		boolean alive = false;
+		for (PreprocessorFetchThread fetch : preprocessorfetchers)
+		{
+			if (fetch.isAlive())
+				alive = true;
+		}
+		return alive;
 	}
 	
-	public ArrayList<PreprocessingData> retrievePreprocessingData() {
-		ArrayList<PreprocessingData> returnList = 
-				new ArrayList<PreprocessingData>();
+	public HashMap<String, PreprocessingData> retrievePreprocessingData() {
+		HashMap<String, PreprocessingData> returnList = 
+				new HashMap<String, PreprocessingData>();
 		for (PreprocessorFetchThread fetch : this.preprocessorfetchers)
-			returnList.add(fetch.getPreprocessor().getPreprocessingData());
+			returnList.put(fetch.getPreprocessor().getPreprocessingDataName(),
+					fetch.getPreprocessor().getPreprocessingData());
 		return returnList;
 	}
 	
