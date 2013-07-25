@@ -17,9 +17,15 @@
 
 package com.animatedjuzz.zebraviews;
 
+import java.io.IOException;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -45,11 +51,25 @@ public class ReviewsActivity extends SherlockFragmentActivity {
 		ActionBar.Tab descriptionTab = getSupportActionBar().newTab();
 		descriptionTab.setText(R.string.description_tab_title);
 		
+		Class<DescriptionFragment> descriptionClass = 
+				DescriptionFragment.class;
+		Fragment descriptionfragment = SherlockFragment.instantiate
+				((SherlockFragmentActivity) this, descriptionClass.getName());
+		descriptionTab.setTabListener
+		(new ReviewsTabListener<SherlockFragment>
+				((SherlockFragmentActivity) this,
+				getResources().getString(R.string.description_tab_title),
+				descriptionfragment));
+		
+		Class<ReviewsFragment> reviewsClass = 
+				ReviewsFragment.class;
+		Fragment reviewsfragment = SherlockFragment.instantiate
+				((SherlockFragmentActivity) this, reviewsClass.getName());
 		reviewsTab.setTabListener
 		(new ReviewsTabListener<SherlockFragment>
 				((SherlockFragmentActivity) this,
 				getResources().getString(R.string.reviews_tab_title),
-				ReviewsFragment.class));
+				reviewsfragment));
 		
 		/*priorSearchesTab.setTabListener
 		(new ReviewsTabListener<SherlockFragment>
@@ -57,15 +77,23 @@ public class ReviewsActivity extends SherlockFragmentActivity {
 				getResources().getString(R.string.previous_searches_title),
 				PreviousSearchesFragment.class));*/
 		
-		descriptionTab.setTabListener
-		(new ReviewsTabListener<SherlockFragment>
-				((SherlockFragmentActivity) this,
-				getResources().getString(R.string.description_tab_title),
-				PreviousSearchesFragment.class));
-		
+		getSupportActionBar().addTab(descriptionTab);
 		getSupportActionBar().addTab(reviewsTab);
 		//getSupportActionBar().addTab(priorSearchesTab);
-		getSupportActionBar().addTab(descriptionTab);
+		
+		
+		ReviewsManager reviews = null;
+		
+		try {
+			reviews = new ReviewsManager(
+				(ReviewsListener) reviewsfragment,
+				(DescriptionListener) descriptionfragment, this.getIntent().
+				getStringExtra("com.animated.juzzz.zebraviews.BARCODE_TEXT"),
+				this.getAssets().open("XML/priority_list.xml"));
+		} catch (IOException e) {
+			Log.d("Priority Inflation", "No priority list found");
+		}
+		reviews.execute();
 	}
 
 	@Override

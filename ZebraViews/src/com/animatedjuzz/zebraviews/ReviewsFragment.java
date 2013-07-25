@@ -17,11 +17,9 @@
 
 package com.animatedjuzz.zebraviews;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +38,14 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 
 	private ArrayList<String> reviewList;
 	
-	private float overallRating = 0;
-	private int ratings = 0;
+	//private float overallRating = 0;
+	//private int ratings = 0;
 	
-	private ReviewsManager reviews;
+	//private ReviewsManager tempReviews;
+	private boolean progressDisable;
 	
 	private ProgressBar progress;
-	private RatingBar ratingsBar;
+	//private RatingBar ratingsBar;
 	private TextView titleText;
 	
 	private final static int MINIMUM_REVIEWS = 8;
@@ -54,16 +53,20 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		String upc = this.getActivity().getIntent().
+		/*String upc = this.getActivity().getIntent().
 				getStringExtra("com.animated.juzzz.zebraviews.BARCODE_TEXT");
 		this.reviews = null;
 		try {
-			reviews = new ReviewsManager(this, upc,
-					this.getActivity().getAssets().open("XML/priority_list.xml"));
+			reviews = new ReviewsManager(this, (DescriptionListener)
+					this.getActivity().getSupportFragmentManager().
+						findFragmentByTag(getResources().getString
+						(R.string.description_tab_title)), upc, this.
+						getActivity().getAssets().
+						open("XML/priority_list.xml"));
 		} catch (IOException e) {
 			Log.d("Priority Inflation", "No priority list found");
 		}
-		reviews.execute();
+		reviews.execute();*/
 	}
 
 	@Override
@@ -72,38 +75,50 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 		View total = inflater.inflate(R.layout.reviews_fragment, 
 				container, false);
 		ListView list = (ListView) total.findViewById(R.id.review_list);
-		this.reviewList = new ArrayList<String>();
+		if (this.reviewList == null)
+			this.reviewList = new ArrayList<String>();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.
 				getActivity(),android.R.layout.simple_list_item_1, reviewList);
 		list.setAdapter(adapter);
 		
 		this.progress = (ProgressBar) 
 				total.findViewById(R.id.review_loading);
-		this.progress.setVisibility(View.VISIBLE);
+		if (!progressDisable)
+			this.progress.setVisibility(View.VISIBLE);
+		//this.ratingsBar = (RatingBar) total.findViewById(R.id.product_rating);
+		//this.ratingsBar.setStepSize(0.1F);
 		
-		this.ratingsBar = (RatingBar) total.findViewById(R.id.product_rating);
-		this.ratingsBar.setStepSize(0.1F);
-		
-		this.titleText = (TextView) total.findViewById(R.id.product_title);
+		//this.titleText = (TextView) total.findViewById(R.id.product_title);
 		
 		return total;
 	}
 
+	// Messy, will clean up later
 	@Override
-	public void onReviewsDataDownloaded(ReviewsData data) {
+	public void onReviewsDataDownloaded(ReviewsData data, ReviewsManager manager) {
 		for (Review review : data.getReviews())
 		{
-			this.overallRating += review.getOverallRating();
+			//this.overallRating += review.getOverallRating();
 			this.reviewList.add(review.toString());
-			this.ratingsBar.setRating((overallRating/((float) ++ratings))
-					/ 2.0F);
+			//this.ratingsBar.setRating((overallRating/((float) ++ratings))
+				//	/ 2.0F);
 		}
+		
+		if (this.progress == null)
+		{
+			if (this.reviewList == null)
+				this.reviewList = new ArrayList<String>();
+			if (this.reviewList.size() == ReviewsFragment.MINIMUM_REVIEWS)
+				this.progressDisable = true;
+			return;
+		}
+		
 		if (this.reviewList.size() == ReviewsFragment.MINIMUM_REVIEWS)
 		{
 			this.progress.setVisibility(View.GONE);
-			this.titleText.setText(this.reviews.getProductName());
-			this.getView().findViewById(R.id.product_rating).
-			setVisibility(View.VISIBLE);
+			//this.titleText.setText(manager.getProductName());
+			//this.getView().findViewById(R.id.product_rating).
+			//setVisibility(View.VISIBLE);
 		}
 		if (this.reviewList.size() >= ReviewsFragment.MINIMUM_REVIEWS)
 		{
@@ -112,12 +127,17 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	}
 
 	@Override
-	public void onCompletion() {
-		this.progress.setVisibility(View.GONE);
-		this.titleText.setText(this.reviews.getProductName());
+	public void onCompletion(ReviewsManager manager) {
+		try {
+			this.progress.setVisibility(View.GONE);
+		} catch (NullPointerException n) {
+			this.progressDisable = true;
+			return;
+		}
+		//this.titleText.setText(manager.getProductName());
 		this.updateList();
-		this.getView().findViewById(R.id.product_rating).
-		setVisibility(View.VISIBLE);
+		//this.getView().findViewById(R.id.product_rating).
+		//setVisibility(View.VISIBLE);
 	}
 	
 	private void updateList() {

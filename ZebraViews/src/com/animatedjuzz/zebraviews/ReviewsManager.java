@@ -14,14 +14,18 @@ import com.zebraviews.reviews.preprocessor.PreprocessingData;
 
 public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 
+	private boolean prexecuting;
 	private ReviewsListener gui;
+	private DescriptionListener description;
 	private ReviewsCompiler compiler;
 	private HashMap<String, PreprocessingData> preprocessedData;
 	
-	public ReviewsManager(ReviewsListener gui, String upc, InputStream 
-			priorityListXML) {
+	public ReviewsManager(ReviewsListener gui, DescriptionListener description,
+			String upc, InputStream	priorityListXML) {
 		this.gui = gui;
+		this.description = description;
 		this.compiler = new ReviewsCompiler(upc, priorityListXML);
+		this.prexecuting = true;
 	}
 	
 	@Override
@@ -47,14 +51,20 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 	
 	@Override
 	protected void onProgressUpdate(ReviewsData... progress) {
+		if (this.prexecuting == true)
+		{
+			this.preprocessedData = this.compiler.retrievePreprocessingData();
+			this.description.onPreExecuteComplete(this);
+			this.prexecuting = false;
+		}
+		
         for (ReviewsData r : progress)
-        	this.gui.onReviewsDataDownloaded(r);
+        	this.gui.onReviewsDataDownloaded(r, this);
     }
 
 	@Override
 	protected void onPostExecute(Void result) {
-		this.preprocessedData = this.compiler.retrievePreprocessingData();
-		this.gui.onCompletion();
+		this.gui.onCompletion(this);
 	}
 	
 	// Preferring shortest name
@@ -73,6 +83,11 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 			return amazon;
 		else
 			return (amazon.length() < google.length()) ? amazon : google;
+	}
+	
+	public float getProductRating() {
+		return Float.parseFloat(this.getPreprocessedData("Amazon").
+				get("overallRating"));
 	}
 	
 	public String getProductDescription() {

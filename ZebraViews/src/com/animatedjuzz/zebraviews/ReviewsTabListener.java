@@ -31,22 +31,19 @@ public class ReviewsTabListener<T extends SherlockFragment> implements TabListen
 	private Fragment mFragment;
     private SherlockFragmentActivity mActivity;
     private String mTag;
-    private Class mClass;
+	private boolean attached;
 	
-	
-    public ReviewsTabListener(SherlockFragmentActivity activity, String tag, Class clz) {
+    public ReviewsTabListener(SherlockFragmentActivity activity, String tag, Fragment fragment) {
     	mActivity = activity;
         mTag = tag;
-        mClass = clz;
+        mFragment = fragment;
 	}
 	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        if (mFragment == null) {
-            mFragment =
-            		SherlockFragment.instantiate
-            		(mActivity, mClass.getName());
+        if (!attached) {
             ft.add(android.R.id.content, mFragment, mTag);
+            attached = true;
         } else {
         	ft.show(mFragment);
         }
@@ -54,7 +51,7 @@ public class ReviewsTabListener<T extends SherlockFragment> implements TabListen
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		if (mFragment != null) {
+		if (attached) {
 			ft.hide(mFragment);
         }
 	}

@@ -12,6 +12,7 @@ import com.zebraviews.reviews.PreprocessorFetchThread;
 public class AmazonPreprocessor extends Preprocessor{
 
 	private final static String DATA_NAME = "Amazon";
+	private static int attempts = 0;
 	
 	@Override
 	public void onSimultaneousExecute() {
@@ -22,6 +23,7 @@ public class AmazonPreprocessor extends Preprocessor{
 	public void onPreExecute() {
 		Element description = null;
 		Element productName = null;
+		Element overallRating = null;
 		AmazonURL address = new AmazonURL(this.getFetchThread().
 				getCompiler().getUPC());
 		address.generateURL();
@@ -33,18 +35,32 @@ public class AmazonPreprocessor extends Preprocessor{
 				Document doc = Jsoup.connect(url).get();
 				description = doc.select("#postBodyPS").first();
 				productName = doc.select(".buying span[id=btAsinTitle]").first();
+				overallRating = 
+						doc.select(".reviews div.gry.txtnormal.acrrating").
+						first();
 				if (description == null) 
 					description = doc.select(".content .productdescriptionwrapper").first();
 				if (description == null)
 					description = doc.select(".aplus").first();
 			}
 			catch (IOException e) {
+				AmazonPreprocessor.attempts++;
+				if (AmazonPreprocessor.attempts < 5)
+					this.onPreExecute();
+				this.done();
+				return;
 			}
 		}
+		double overallRatingNum = Double.parseDouble(overallRating.text().
+				substring(0,3))*2;
 		if (!this.getPreprocessingData().containsKey("description") && description != null)
 			this.getPreprocessingData().put("description", description.text());
 		if (!this.getPreprocessingData().containsKey("name") && productName != null)
 			this.getPreprocessingData().put("name", productName.text());
+		if (!this.getPreprocessingData().containsKey("overallRating")
+				&& overallRating != null)
+			this.getPreprocessingData().put("overallRating", "" + 
+				overallRatingNum);
 		this.done();
 	}
 

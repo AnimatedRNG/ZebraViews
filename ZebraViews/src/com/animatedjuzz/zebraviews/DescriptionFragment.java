@@ -17,8 +17,49 @@
 
 package com.animatedjuzz.zebraviews;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.TextView;
+
 import com.actionbarsherlock.app.SherlockFragment;
 
-public class DescriptionFragment extends SherlockFragment {
+public class DescriptionFragment extends SherlockFragment implements DescriptionListener{
+
+	private ProgressBar progress;
+	private RatingBar ratings;
+	private TextView title;
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View total = inflater.inflate(R.layout.description_fragment, 
+				container, false);
+		this.progress = (ProgressBar) 
+				total.findViewById(R.id.description_loading);
+		this.progress.setVisibility(View.VISIBLE);
+		
+		this.ratings = (RatingBar) total.findViewById(R.id.ratings);
+		this.title = (TextView) total.findViewById(R.id.title);
+		
+		return total;
+	}
+
+	@Override
+	public void onPreExecuteComplete(ReviewsManager manager) {
+		this.progress.setVisibility(View.GONE);
+		this.ratings.setVisibility(View.VISIBLE);
+		this.ratings.setStepSize(0.1F);
+		this.ratings.setRating(manager.getProductRating() / 2.0F);
+		this.title.setText(manager.getProductName());
+	}
 
 }
