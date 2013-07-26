@@ -21,6 +21,7 @@ public class LabelApiPreprocessor extends Preprocessor {
 		try
 		{
 			String product = new String();
+			String similarProducts = new String();
 			String upc = this.getFetchThread().getCompiler().getUPC();
 			LabelApiURI requestGenerator = 
 					new LabelApiURI(upc, API_KEY);
@@ -38,6 +39,12 @@ public class LabelApiPreprocessor extends Preprocessor {
 			JSONObject results = (JSONObject) JSONRequest.
 					getRequest(requestGenerator.
 							getLabelURI(sessionID));
+			JSONArray similarResults = (JSONArray) JSONRequest.getRequest(requestGenerator.getLabelArrayURI(sessionID, "5", "0")).get("productsArray");
+			for(int i = 0; i<similarResults.size(); i++)
+			{
+				similarProducts+=((JSONObject) similarResults.get(i)).get("product_name")+GooglePreprocessor.DELIMITER;
+
+			}
 			product = (((JSONObject) results).
 					get("product_name")).toString();
 			String allergens = "";
@@ -53,6 +60,7 @@ public class LabelApiPreprocessor extends Preprocessor {
 			}
 			this.getPreprocessingData().put("allergens", allergens);
 			this.getPreprocessingData().put("title", product);
+			this.getPreprocessingData().put("similarProducts", similarProducts);
 			this.done();
 		}
 		catch(Exception e)
