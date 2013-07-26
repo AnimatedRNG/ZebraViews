@@ -13,6 +13,7 @@ import com.zebraviews.reviews.PreprocessorFetchThread;
 public class AmazonPreprocessor extends Preprocessor{
 
 	private final static String DATA_NAME = "Amazon";
+	private static int attempts = 0;
 	
 	@Override
 	public void onSimultaneousExecute() {
@@ -23,6 +24,7 @@ public class AmazonPreprocessor extends Preprocessor{
 	public void onPreExecute() {
 		Element description = null;
 		Element productName = null;
+		Element overallRating = null;
 		Elements similarProducts = null;
 		String similarProductsNames = new String();
 		AmazonURL address = new AmazonURL(this.getFetchThread().
@@ -36,6 +38,7 @@ public class AmazonPreprocessor extends Preprocessor{
 				Document doc = Jsoup.connect(url).get();
 				description = doc.select("#postBodyPS").first();
 				productName = doc.select(".buying span[id=btAsinTitle]").first();
+				overallRating = doc.select(".reviewsdiv.gry.txtnormal.acrrating").first();
 				if (description == null) 
 					description = doc.select(".content .productdescriptionwrapper").first();
 				if (description == null)
@@ -44,7 +47,7 @@ public class AmazonPreprocessor extends Preprocessor{
 				if(!similarProducts.text().equals(""))
 				{
 					for(int i = 0; (i < similarProducts.size() && i < 4); i++)
-						similarProductsNames+=similarProducts.get(i).text().substring(0, similarProducts.get(i).text().indexOf("stars")+5);
+						similarProductsNames+=similarProducts.get(i).text().substring(0, similarProducts.get(i).text().indexOf("stars")+5)+GooglePreprocessor.DELIMITER;
 				}
 				else
 				{
@@ -55,8 +58,16 @@ public class AmazonPreprocessor extends Preprocessor{
 				}
 			}
 			catch (Exception e) {
+				AmazonPreprocessor.attempts++;
+				if (AmazonPreprocessor.attempts < 5)
+				this.onPreExecute();
+				this.done();
+				return;
 			}
 		}
+		double overallRatingNum = Double.parseDouble(overallRating.text().substring(0,3))*2;
+		if (!this.getPreprocessingData().containsKey("overallRating") && overallRating != null)
+		this.getPreprocessingData().put("overallRating", "" + overallRatingNum);
 		if (!this.getPreprocessingData().containsKey("description") && description != null)
 			this.getPreprocessingData().put("description", description.text());
 		if (!this.getPreprocessingData().containsKey("name") && productName != null)
