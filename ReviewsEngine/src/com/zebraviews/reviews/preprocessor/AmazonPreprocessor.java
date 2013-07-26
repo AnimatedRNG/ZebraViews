@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.zebraviews.reviews.AmazonURL;
 import com.zebraviews.reviews.PreprocessorFetchThread;
@@ -12,7 +13,6 @@ import com.zebraviews.reviews.PreprocessorFetchThread;
 public class AmazonPreprocessor extends Preprocessor{
 
 	private final static String DATA_NAME = "Amazon";
-	private static int attempts = 0;
 	
 	@Override
 	public void onSimultaneousExecute() {
@@ -23,7 +23,8 @@ public class AmazonPreprocessor extends Preprocessor{
 	public void onPreExecute() {
 		Element description = null;
 		Element productName = null;
-		Element overallRating = null;
+		Elements similarProducts = null;
+		String similarProductsNames = new String();
 		AmazonURL address = new AmazonURL(this.getFetchThread().
 				getCompiler().getUPC());
 		address.generateURL();
@@ -35,32 +36,33 @@ public class AmazonPreprocessor extends Preprocessor{
 				Document doc = Jsoup.connect(url).get();
 				description = doc.select("#postBodyPS").first();
 				productName = doc.select(".buying span[id=btAsinTitle]").first();
-				overallRating = 
-						doc.select(".reviews div.gry.txtnormal.acrrating").
-						first();
 				if (description == null) 
 					description = doc.select(".content .productdescriptionwrapper").first();
 				if (description == null)
 					description = doc.select(".aplus").first();
+				similarProducts = doc.select("div.asindetails");
+				if(!similarProducts.text().equals(""))
+				{
+					for(int i = 0; (i < similarProducts.size() && i < 4); i++)
+						similarProductsNames+=similarProducts.get(i).text().substring(0, similarProducts.get(i).text().indexOf("stars")+5);
+				}
+				else
+				{
+					similarProducts = doc.select("div.shoveler-content");
+					String[] stuff = similarProducts.first().text().split("\\d\\d\\p{Punct}\\d\\d\\p{Blank}");
+					for(String e: stuff)
+						similarProductsNames+=e.substring(0,e.indexOf("stars")-13)+GooglePreprocessor.DELIMITER;
+				}
 			}
-			catch (IOException e) {
-				AmazonPreprocessor.attempts++;
-				if (AmazonPreprocessor.attempts < 5)
-					this.onPreExecute();
-				this.done();
-				return;
+			catch (Exception e) {
 			}
 		}
-		double overallRatingNum = Double.parseDouble(overallRating.text().
-				substring(0,3))*2;
 		if (!this.getPreprocessingData().containsKey("description") && description != null)
 			this.getPreprocessingData().put("description", description.text());
 		if (!this.getPreprocessingData().containsKey("name") && productName != null)
 			this.getPreprocessingData().put("name", productName.text());
-		if (!this.getPreprocessingData().containsKey("overallRating")
-				&& overallRating != null)
-			this.getPreprocessingData().put("overallRating", "" + 
-				overallRatingNum);
+		if (!this.getPreprocessingData().containsKey("similarProducts") && similarProductsNames!=null && !similarProductsNames.equals(""))
+			this.getPreprocessingData().put("similarProducts", similarProductsNames);
 		this.done();
 	}
 
