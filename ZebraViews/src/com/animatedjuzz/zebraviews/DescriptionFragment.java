@@ -32,6 +32,9 @@ public class DescriptionFragment extends SherlockFragment implements Description
 	private ProgressBar progress;
 	private RatingBar ratings;
 	private TextView title;
+	private TextView description;
+	private TextView bestPrice;
+	private TextView price;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -49,6 +52,9 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		
 		this.ratings = (RatingBar) total.findViewById(R.id.ratings);
 		this.title = (TextView) total.findViewById(R.id.title);
+		this.description = (TextView) total.findViewById(R.id.description);
+		this.bestPrice = (TextView) total.findViewById(R.id.best_price);
+		this.price = (TextView) total.findViewById(R.id.price);
 		
 		return total;
 	}
@@ -60,6 +66,9 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		this.ratings.setStepSize(0.1F);
 		this.ratings.setRating(manager.getProductRating() / 2.0F);
 		this.title.setText(manager.getProductName());
+		this.description.setText(manager.getProductDescription());
+		this.bestPrice.setVisibility(View.VISIBLE);
+		this.price.setText(manager.getBestPrice());
 	}
 
 }
