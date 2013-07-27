@@ -55,7 +55,7 @@ public class AmazonPreprocessor extends Preprocessor{
 				Document doc = Jsoup.connect(url).get();
 				description = doc.select("#postBodyPS").first();
 				productName = doc.select(".buying span[id=btAsinTitle]").first();
-				overallRating = doc.select(".reviewsdiv.gry.txtnormal.acrrating").first();
+				overallRating = doc.select("span.asinreviewssummary.acr-popover").first();
 				if (description == null) 
 					description = doc.select(".content .productdescriptionwrapper").first();
 				if (description == null)
@@ -84,7 +84,7 @@ public class AmazonPreprocessor extends Preprocessor{
 		}
 		double overallRatingNum = Double.parseDouble(overallRating.text().substring(0,3))*2;
 		if (!this.getPreprocessingData().containsKey("overallRating") && overallRating != null)
-		this.getPreprocessingData().put("overallRating", "" + overallRatingNum);
+			this.getPreprocessingData().put("overallRating", "" + overallRatingNum);
 		if (!this.getPreprocessingData().containsKey("description") && description != null)
 			this.getPreprocessingData().put("description", description.text());
 		if (!this.getPreprocessingData().containsKey("name") && productName != null)
