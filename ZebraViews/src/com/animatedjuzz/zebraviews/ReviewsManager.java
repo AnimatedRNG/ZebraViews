@@ -114,7 +114,7 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 	// Currently uses cheap culling
 	public String getBestPrice() {
 		List<String> prices =
-				Arrays.asList(this.getPreprocessedData("Google").get("price").
+				Arrays.asList(this.getPreprocessedData("Google").get("prices").
 				split("\\s+"));
 		
 		double bestPrice = Double.MAX_VALUE;
