@@ -25,7 +25,7 @@ public abstract class Preprocessor implements Runnable {
 	private PreprocessingData data;
 	private PreprocessorFetchThread fetchThread;
 	
-	protected final static String DELIMITER = "/#)(%^#/";
+	public final static String DELIMITER = "/#)(%^#/";
 	
 	@Override
 	public void run() {
