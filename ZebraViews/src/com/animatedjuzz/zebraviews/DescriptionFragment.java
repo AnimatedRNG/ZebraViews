@@ -68,7 +68,7 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		this.title.setText(manager.getProductName());
 		this.description.setText(manager.getProductDescription());
 		this.bestPrice.setVisibility(View.VISIBLE);
-		this.price.setText(manager.getBestPrice());
+		this.price.setText("$" + manager.getBestPrice());
 	}
 
 }
