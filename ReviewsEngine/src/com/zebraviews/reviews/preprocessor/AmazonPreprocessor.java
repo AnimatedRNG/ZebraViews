@@ -48,6 +48,7 @@ public class AmazonPreprocessor extends Preprocessor{
 				getCompiler().getUPC());
 		address.generateURL();
 		String url = address.getURL();
+		double overallRatingNum = 0.0F;
 		if(!url.equals("No ASIN found"))
 		{
 			try
@@ -56,6 +57,7 @@ public class AmazonPreprocessor extends Preprocessor{
 				description = doc.select("#postBodyPS").first();
 				productName = doc.select(".buying span[id=btAsinTitle]").first();
 				overallRating = doc.select("span.asinreviewssummary.acr-popover").first();
+				overallRatingNum = Double.parseDouble(overallRating.text().substring(0,3))*2; 
 				if (description == null) 
 					description = doc.select(".content .productdescriptionwrapper").first();
 				if (description == null)
@@ -82,7 +84,6 @@ public class AmazonPreprocessor extends Preprocessor{
 				return;
 			}
 		}
-		double overallRatingNum = Double.parseDouble(overallRating.text().substring(0,3))*2;
 		if (!this.getPreprocessingData().containsKey("overallRating") && overallRating != null)
 			this.getPreprocessingData().put("overallRating", "" + overallRatingNum);
 		if (!this.getPreprocessingData().containsKey("description") && description != null)
