@@ -5,5 +5,5 @@
 	<string name="reviews_tab_title">Reviews</string>
 	<string name="previous_searches_title">Previous Searches</string>
 	<string name="description_tab_title">Description</string>
-	<string name="best_price">Best Price:  $</string>
+	<string name="best_price">Best Price:  </string>
 </resources>
