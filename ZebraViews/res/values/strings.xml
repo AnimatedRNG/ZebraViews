@@ -6,4 +6,5 @@
 	<string name="previous_searches_title">Previous Searches</string>
 	<string name="description_tab_title">Description</string>
 	<string name="best_price">Best Price:  </string>
+	<string name="allergen_prefix">This product contains: </string>
 </resources>

@@ -84,6 +84,17 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 		this.gui.onCompletion(this);
 	}
 	
+	public String getAllergens() {
+		String labelAPI = this.getPreprocessedData("LabelAPI").
+				get("allergens");
+		
+		if (labelAPI == null)
+			return null;
+		
+		labelAPI.replaceAll("_", " ");
+		return labelAPI;
+	}
+	
 	// Preferring shortest name
 	public String getProductName() {
 		

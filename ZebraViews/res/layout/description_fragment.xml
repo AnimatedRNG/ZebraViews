@@ -56,6 +56,7 @@
         		    android:layout_width="wrap_content"
         		    android:layout_height="wrap_content"
         		    android:layout_below="@id/description"
+        		    android:layout_marginTop="10dp"
         		    android:text="@string/best_price"
         		    android:textStyle="bold"
         		    android:visibility="gone" />
@@ -69,6 +70,17 @@
         		    android:layout_alignParentBottom="true"
         		    android:layout_toRightOf="@+id/best_price"
         		    android:textStyle="italic" />
+        		
+        		<TextView
+        		    android:id="@+id/allergens"
+        		    android:maxLines="1"
+        		    android:layout_width="wrap_content"
+        		    android:layout_height="wrap_content"
+        		    android:layout_below="@id/best_price"
+        		    android:layout_marginTop="10dp"
+        		    android:text="@string/allergen_prefix"
+        		    android:visibility="gone"
+        		    android:textStyle="bold" />
 
     		</RelativeLayout>
 

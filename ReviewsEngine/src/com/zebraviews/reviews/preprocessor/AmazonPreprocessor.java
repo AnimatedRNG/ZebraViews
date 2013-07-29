@@ -31,6 +31,7 @@ public class AmazonPreprocessor extends Preprocessor{
 
 	private final static String DATA_NAME = "Amazon";
 	private static int attempts = 0;
+	public boolean running;
 	
 	@Override
 	public void onSimultaneousExecute() {
@@ -39,6 +40,7 @@ public class AmazonPreprocessor extends Preprocessor{
 
 	@Override
 	public void onPreExecute() {
+		this.running = true;
 		Element description = null;
 		Element productName = null;
 		Element overallRating = null;
@@ -93,6 +95,7 @@ public class AmazonPreprocessor extends Preprocessor{
 		if (!this.getPreprocessingData().containsKey("similarProducts") && similarProductsNames!=null && !similarProductsNames.equals(""))
 			this.getPreprocessingData().put("similarProducts", similarProductsNames);
 		this.done();
+		this.running = false;
 	}
 
 	@Override

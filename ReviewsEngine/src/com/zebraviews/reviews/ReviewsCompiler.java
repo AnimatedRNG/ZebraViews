@@ -121,6 +121,10 @@ public class ReviewsCompiler {
 		boolean alive = false;
 		for (PreprocessorFetchThread fetch : preprocessorfetchers)
 		{
+			if (fetch.getPreprocessor() instanceof AmazonPreprocessor && 
+					((AmazonPreprocessor) fetch.getPreprocessor()).running)
+				return true;
+
 			if (fetch.isAlive())
 				alive = true;
 		}
