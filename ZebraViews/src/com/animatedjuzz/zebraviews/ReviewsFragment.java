@@ -98,6 +98,8 @@ public class ReviewsFragment extends SherlockFragment implements ReviewsListener
 	public void onReviewsDataDownloaded(ReviewsData data, ReviewsManager manager) {
 		for (Review review : data.getReviews())
 		{
+			if (this.reviewList == null)
+				this.reviewList = new ArrayList<String>();
 			//this.overallRating += review.getOverallRating();
 			this.reviewList.add(review.toString());
 			//this.ratingsBar.setRating((overallRating/((float) ++ratings))
