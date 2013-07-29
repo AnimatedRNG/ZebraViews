@@ -75,7 +75,7 @@ public class AmazonPreprocessor extends Preprocessor{
 					similarProducts = doc.select("div.shoveler-content");
 					String[] stuff = similarProducts.first().text().split("\\d\\d\\p{Punct}\\d\\d\\p{Blank}");
 					for(String e: stuff)
-						similarProductsNames+=e.substring(0,e.indexOf("stars")-13)+GooglePreprocessor.DELIMITER;
+						similarProductsNames+=e.substring(0,e.indexOf("stars")-13)+Preprocessor.DELIMITER;
 				}
 			}
 			catch (Exception e) {

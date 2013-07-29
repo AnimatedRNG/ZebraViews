@@ -60,7 +60,7 @@ public class LabelApiPreprocessor extends Preprocessor {
 			JSONArray similarResults = (JSONArray) JSONRequest.getRequest(requestGenerator.getLabelArrayURI(sessionID, "5", "0")).get("productsArray");
 			for(int i = 0; i<similarResults.size(); i++)
 			{
-				similarProducts+=((JSONObject) similarResults.get(i)).get("product_name")+GooglePreprocessor.DELIMITER;
+				similarProducts+=((JSONObject) similarResults.get(i)).get("product_name")+Preprocessor.DELIMITER;
 
 			}
 			product = (((JSONObject) results).
