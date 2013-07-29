@@ -31,7 +31,6 @@ public class AmazonPreprocessor extends Preprocessor{
 
 	private final static String DATA_NAME = "Amazon";
 	private static int attempts = 0;
-	private boolean scraping;
 	public boolean running;
 	
 	@Override
@@ -54,71 +53,38 @@ public class AmazonPreprocessor extends Preprocessor{
 		double overallRatingNum = 0.0F;
 		if(!url.equals("No ASIN found"))
 		{
-			do
+			try
 			{
-				scraping = false;
-				Document doc = null;
-				try {
-					doc = Jsoup.connect(url).get();
-				} catch (Exception e1) {
-					scraping = true;
-					AmazonPreprocessor.attempts++;
-					continue;
-				}
-				try
+				Document doc = Jsoup.connect(url).get();
+				description = doc.select("#postBodyPS").first();
+				productName = doc.select(".buying span[id=btAsinTitle]").first();
+				overallRating = doc.select("span.asinreviewssummary.acr-popover").first();
+				overallRatingNum = Double.parseDouble(overallRating.text().substring(0,3))*2; 
+				if (description == null) 
+					description = doc.select(".content .productdescriptionwrapper").first();
+				if (description == null)
+					description = doc.select(".aplus").first();
+				similarProducts = doc.select("div.asindetails");
+				if(!similarProducts.text().equals(""))
 				{
-					productName = doc.select(".buying span[id=btAsinTitle]").first();
-				} catch (Exception e2){
-					scraping = true;
-					AmazonPreprocessor.attempts++;
+					for(int i = 0; (i < similarProducts.size() && i < 4); i++)
+						similarProductsNames+=similarProducts.get(i).text().substring(0, similarProducts.get(i).text().indexOf("stars")+5)+GooglePreprocessor.DELIMITER;
 				}
-				try
+				else
 				{
-					overallRating = doc.select("span.asinreviewssummary.acr-popover").first();
-					overallRatingNum = Double.parseDouble(overallRating.text().substring(0,3))*2; 
-				} catch (Exception e3){
-					scraping = true;
-					AmazonPreprocessor.attempts++;
+					similarProducts = doc.select("div.shoveler-content");
+					String[] stuff = similarProducts.first().text().split("\\d\\d\\p{Punct}\\d\\d\\p{Blank}");
+					for(String e: stuff)
+						similarProductsNames+=e.substring(0,e.indexOf("stars")-13)+Preprocessor.DELIMITER;
 				}
-				try
-				{
-					description = doc.select("#postBodyPS").first();
-					if (description == null) 
-						description = doc.select(".content .productdescriptionwrapper").first();
-					if (description == null)
-						description = doc.select(".aplus").first();
-				} catch (Exception e4){
-					scraping = true;
-					AmazonPreprocessor.attempts++;
-				}
-				try
-				{
-					similarProducts = doc.select("div.asindetails");
-					if(!similarProducts.text().equals(""))
-					{
-						for(int i = 0; (i < similarProducts.size() && i < 4); i++)
-							similarProductsNames+=similarProducts.get(i).text().substring(0, similarProducts.get(i).text().indexOf("stars")+5)+GooglePreprocessor.DELIMITER;
-					}
-					else
-					{
-						similarProducts = doc.select("div.shoveler-content");
-						String[] stuff = similarProducts.first().text().split("\\d\\d\\p{Punct}\\d\\d\\p{Blank}");
-						for(String e: stuff)
-							similarProductsNames+=e.substring(0,e.indexOf("stars")-13)+Preprocessor.DELIMITER;
-					}
-				} catch (Exception e5){
-					scraping = true;
-					AmazonPreprocessor.attempts++;
-				}
-				if(AmazonPreprocessor.attempts==10)
-				{
-					scraping = false;
-					this.done();
-					
-				}
-					
 			}
-			while (scraping);
+			catch (Exception e) {
+				AmazonPreprocessor.attempts++;
+				if (AmazonPreprocessor.attempts < 5)
+				this.onPreExecute();
+				this.done();
+				return;
+			}
 		}
 		if (!this.getPreprocessingData().containsKey("overallRating") && overallRating != null)
 			this.getPreprocessingData().put("overallRating", "" + overallRatingNum);
