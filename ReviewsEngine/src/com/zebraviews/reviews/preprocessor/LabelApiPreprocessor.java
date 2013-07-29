@@ -27,6 +27,7 @@ public class LabelApiPreprocessor extends Preprocessor {
 
 	public static final String API_KEY = "r3epxkdjfejz6b6cavxtpxth";
 	public static final String DATA_NAME = "LabelAPI"; 
+	private static int attempts = 0;
 	
 	@Override
 	public void onSimultaneousExecute() {
@@ -82,6 +83,9 @@ public class LabelApiPreprocessor extends Preprocessor {
 		}
 		catch(Exception e)
 		{
+			LabelApiPreprocessor.attempts++;
+			if (LabelApiPreprocessor.attempts < 5)
+			this.onPreExecute();
 			this.done();
 			return;
 		}
