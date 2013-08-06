@@ -18,14 +18,31 @@
 package com.zebraviews.reviews.preprocessor;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.zebraviews.reviews.AmazonURL;
 import com.zebraviews.reviews.PreprocessorFetchThread;
+import com.zebraviews.reviews.SignedRequestsHelper;
 
 public class AmazonPreprocessor extends Preprocessor{
 
@@ -42,30 +59,30 @@ public class AmazonPreprocessor extends Preprocessor{
 	@Override
 	public void onPreExecute() {
 		this.running = true;
-		Element description = null;
-		Element productName = null;
-		Element overallRating = null;
-		Elements similarProducts = null;
-		String similarProductsNames = new String();
-		AmazonURL address = new AmazonURL(this.getFetchThread().
+		String description = null;
+		String productName = null;
+		NodeList similarProducts = null;
+		String similarProductsList = null;
+		Double overallRatingNum = 0.0;
+		/*AmazonURL address = new AmazonURL(this.getFetchThread().
 				getCompiler().getUPC());
 		address.generateURL();
 		String url = address.getURL();
 		double overallRatingNum = 0.0F;
 		if(!url.equals("No ASIN found"))
-		{
-			do
-			{
-				scraping = false;
+		{*/
+			//do
+			//{
+				/*scraping = false;
 				Document doc = null;
 				try {
 					doc = Jsoup.connect(url).get();
 				} catch (Exception e1) {
 					scraping = true;
 					AmazonPreprocessor.attempts++;
-					continue;
-				}
-				try
+				}*/
+				
+				/*try
 				{
 					productName = doc.select(".buying span[id=btAsinTitle]").first();
 				} catch (Exception e2){
@@ -109,25 +126,68 @@ public class AmazonPreprocessor extends Preprocessor{
 				} catch (Exception e5){
 					scraping = true;
 					AmazonPreprocessor.attempts++;
+				} */
+				SignedRequestsHelper helper = null;
+				try {
+					helper = SignedRequestsHelper.getInstance("ecs.amazonaws.com", "AKIAJYAME7RKTOR2CI5Q", "YoTVtzH1OSV2/V+sEXrX6FJQ7Isl7npmhCgFHUG9");
+				
+				} catch(Exception e){
+						
 				}
-				if(AmazonPreprocessor.attempts==10)
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("Service", "AWSECommerceService");
+		        params.put("Version", "2013-8-2");
+		        params.put("Operation", "ItemLookup");
+		        params.put("IdType", "UPC");
+		        params.put("SearchIndex", "All");
+		        params.put("ItemId", "736211306258");
+		        params.put("ResponseGroup", "Large");
+		        params.put("AssociateTag", "zebra030-20");
+		        try {
+		        	String requestUrl = helper.sign(params);		        
+		            Document response = getResponse(requestUrl);
+		            Transformer trans = TransformerFactory.newInstance().newTransformer();
+		            Properties props = new Properties();
+		            props.put(OutputKeys.INDENT, "yes");
+		            trans.setOutputProperties(props);
+		            StreamResult res = new StreamResult(new StringWriter());
+		            DOMSource src = new DOMSource(response);
+		            trans.transform(src, res);
+		            String toString = res.getWriter().toString();
+		            //System.out.println(toString);
+		            productName = response.getElementsByTagName("Title").item(0).getTextContent();
+		            description = response.getElementsByTagName("Content").item(0).getTextContent();
+		            String url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
+		            org.jsoup.nodes.Document doc = Jsoup.connect(url).get();
+		            similarProducts = response.getElementsByTagName("SimilarProduct");
+		            if (similarProducts.getLength() > 1){
+		            	similarProductsList = similarProducts.item(0).getTextContent().substring(10);
+		            	for (int i = 1; i < similarProducts.getLength(); i ++){
+		            		similarProductsList += Preprocessor.DELIMITER + similarProducts.item(i).getTextContent().substring(10); 
+		            }}    
+		            org.jsoup.nodes.Element overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
+		            overallRatingNum = Double.parseDouble(overallRating.text().substring(0, 3)) * 2;
+		        } catch (Exception ex) {
+		            //Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+		        }
+				 			
+				/*if(AmazonPreprocessor.attempts==10)
 				{
 					scraping = false;
 					this.done();
 					
-				}
+				}*/
 					
-			}
-			while (scraping);
-		}
-		if (!this.getPreprocessingData().containsKey("overallRating") && overallRating != null)
+			//}
+			//while (scraping);
+		if (!this.getPreprocessingData().containsKey("overallRating") && overallRatingNum != null)
 			this.getPreprocessingData().put("overallRating", "" + overallRatingNum);
 		if (!this.getPreprocessingData().containsKey("description") && description != null)
-			this.getPreprocessingData().put("description", description.text());
+			this.getPreprocessingData().put("description", description);
 		if (!this.getPreprocessingData().containsKey("name") && productName != null)
-			this.getPreprocessingData().put("name", productName.text());
-		if (!this.getPreprocessingData().containsKey("similarProducts") && similarProductsNames!=null && !similarProductsNames.equals(""))
-			this.getPreprocessingData().put("similarProducts", similarProductsNames);
+			this.getPreprocessingData().put("name", productName);
+		if (!this.getPreprocessingData().containsKey("similarProducts") && similarProductsList!=null && !similarProductsList.equals(""))
+			this.getPreprocessingData().put("similarProducts", similarProductsList);
 		this.done();
 		this.running = false;
 	}
@@ -136,4 +196,11 @@ public class AmazonPreprocessor extends Preprocessor{
 	public String getPreprocessingDataName() {
 		return AmazonPreprocessor.DATA_NAME;
 	}
+	
+	private static Document getResponse(String url) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.parse(url);
+        return doc;
+    }
 }
+
