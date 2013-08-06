@@ -37,7 +37,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.zebraviews.reviews.SignedRequestsHelper;
+import com.zebraviews.reviews.util.SignedRequestsHelper;
 
 public class AmazonPreprocessor extends Preprocessor{
 
@@ -134,7 +134,8 @@ public class AmazonPreprocessor extends Preprocessor{
 			params.put("Operation", "ItemLookup");
 			params.put("IdType", "UPC");
 			params.put("SearchIndex", "All");
-			params.put("ItemId", "736211306258");
+			params.put("ItemId", this.getFetchThread().getCompiler().
+					getUPC());
 			params.put("ResponseGroup", "Large");
 			params.put("AssociateTag", "zebra030-20");
 			try {
