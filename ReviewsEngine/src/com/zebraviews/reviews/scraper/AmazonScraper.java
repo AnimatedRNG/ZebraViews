@@ -42,12 +42,14 @@ public class AmazonScraper implements Scraper {
 				getReviewsCompiler().getUPC());
 		address.generateURL();
 		String url = address.getURL();
+		Element overallRating = null;
 		if(!url.equals("No ASIN found"))
 		{
+			int i = 0;
 			try
 			{
 				Document doc = Jsoup.connect(url).get();
-				Element overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
+				overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
 				if(overallRating==null)
 				{	
 					Review rev= new Review("No reviews found", 0, reviewCount);
@@ -84,6 +86,23 @@ public class AmazonScraper implements Scraper {
 				}
 			}
 			catch (IOException e) {
+				if(i<6)
+				{
+					i++;
+					this.run();
+				}
+				else
+				{
+					if(overallRating==null)
+					{	
+						Review rev= new Review("No reviews found", 0, reviewCount);
+						rev.setTitle("");
+						rev.setRating(0);
+						this.fetchThread.addReview(rev);					
+						this.setCompletion(true);
+						return;
+					}					
+				}
 			}
 		}
 		else
