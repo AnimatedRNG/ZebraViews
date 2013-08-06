@@ -17,15 +17,30 @@
 
 package com.zebraviews.reviews.scraper;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.xml.sax.SAXException;
 
 import com.zebraviews.reviews.AmazonURL;
 import com.zebraviews.reviews.Review;
 import com.zebraviews.reviews.ReviewFetchThread;
+import com.zebraviews.reviews.util.SignedRequestsHelper;
 
 public class AmazonScraper implements Scraper {
 
@@ -38,11 +53,38 @@ public class AmazonScraper implements Scraper {
 	@Override
 	public void run()
 	{
-		AmazonURL address = new AmazonURL(this.fetchThread.
-				getReviewsCompiler().getUPC());
-		address.generateURL();
-		String url = address.getURL();
+		String url = null;
+		SignedRequestsHelper helper = null;
+		try {
+			helper = SignedRequestsHelper.getInstance("ecs.amazonaws.com", "AKIAJYAME7RKTOR2CI5Q", "YoTVtzH1OSV2/V+sEXrX6FJQ7Isl7npmhCgFHUG9");
+		} catch(Exception e){
+			
+		}
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("Service", "AWSECommerceService");
+		params.put("Version", "2013-8-2");
+		params.put("Operation", "ItemLookup");
+		params.put("IdType", "UPC");
+		params.put("SearchIndex", "All");
+		params.put("ItemId", this.fetchThread.getReviewsCompiler().getUPC());
+		params.put("ResponseGroup", "Large");
+		params.put("AssociateTag", "zebra030-20");
+		try {
+			String requestUrl = helper.sign(params);
+			org.w3c.dom.Document response = getResponse(requestUrl);
+			Transformer trans = TransformerFactory.newInstance().newTransformer();
+			Properties props = new Properties();
+			props.put(OutputKeys.INDENT, "yes");
+			trans.setOutputProperties(props);
+			StreamResult res = new StreamResult(new StringWriter());
+			DOMSource src = new DOMSource(response);trans.transform(src, res);
+			url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
+		} catch (Exception ex) {
+			
+		}
 		Element overallRating = null;
+		if(url==null)
+			url = "No ASIN found";
 		if(!url.equals("No ASIN found"))
 		{
 			int i = 0;
@@ -115,6 +157,12 @@ public class AmazonScraper implements Scraper {
 		this.setCompletion(true);
 	}
 
+	private static org.w3c.dom.Document getResponse(String url) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        org.w3c.dom.Document doc = builder.parse(url);
+        return doc;
+    }	
+	
 	@Override
 	public float getPriority() {
 		return this.priority;
