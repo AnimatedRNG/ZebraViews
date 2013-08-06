@@ -43,8 +43,9 @@ public class AmazonTest {
         params.put("Operation", "ItemLookup");
         params.put("IdType", "UPC");
         params.put("SearchIndex", "All");
-        params.put("ItemId", "635753490879");
+        params.put("ItemId", "736211306258");
         params.put("ResponseGroup", "Large");
+        params.put("AssociateTag", "zebra030-20");
         
         String url = helper.sign(params);
         
