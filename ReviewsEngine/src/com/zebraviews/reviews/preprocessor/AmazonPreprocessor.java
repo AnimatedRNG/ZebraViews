@@ -37,6 +37,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.zebraviews.reviews.AmazonURL;
 import com.zebraviews.reviews.util.SignedRequestsHelper;
 
 public class AmazonPreprocessor extends Preprocessor{
@@ -128,11 +129,17 @@ public class AmazonPreprocessor extends Preprocessor{
 			} catch(Exception e){
 				
 			}
+			
+			String upc = this.getFetchThread().getCompiler().
+					getUPC();
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("Service", "AWSECommerceService");
 			params.put("Version", "2013-8-2");
 			params.put("Operation", "ItemLookup");
-			params.put("IdType", "UPC");
+			if (upc.length() == 12)
+				params.put("IdType", "UPC");
+			else if (upc.length() == 10 || upc.length() == 13)
+				params.put("IdType", "ISBN");
 			params.put("SearchIndex", "All");
 			params.put("ItemId", this.getFetchThread().getCompiler().
 					getUPC());
@@ -150,6 +157,8 @@ public class AmazonPreprocessor extends Preprocessor{
 				productName = response.getElementsByTagName("Title").item(0).getTextContent();
 				description = response.getElementsByTagName("Content").item(0).getTextContent();
 				String url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
+				//AmazonURL genURL = new AmazonURL(upc); genURL.generateURL();
+				//String url = genURL.getURL();
 				org.jsoup.nodes.Document doc = Jsoup.connect(url).get();
 				similarProducts = response.getElementsByTagName("SimilarProduct");
 				if (similarProducts.getLength() > 1){
