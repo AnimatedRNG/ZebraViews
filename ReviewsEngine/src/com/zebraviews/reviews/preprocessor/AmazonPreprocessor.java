@@ -59,6 +59,7 @@ public class AmazonPreprocessor extends Preprocessor{
 		String productName = null;
 		NodeList similarProducts = null;
 		String similarProductsList = null;
+		String price = null;
 		Double overallRatingNum = 0.0;
 		/*AmazonURL address = new AmazonURL(this.getFetchThread().
 				getCompiler().getUPC());
@@ -162,6 +163,28 @@ public class AmazonPreprocessor extends Preprocessor{
 						.replace("</i>", "").replace("<a>", "").replace("</a>", "")
 						.replace("<ul id=list1\">", "");
 				String url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
+				try {
+					price = response.getElementsByTagName("SalePrice").item(0).getTextContent();
+				}
+				catch (Exception e) {
+				}
+				if (price == null) {
+					try {
+						price = response.getElementsByTagName("LowestNewPrice").item(0).getTextContent();
+					}
+					catch (Exception e) {			
+					}
+				}
+				if (price == null) {
+					try {
+						price = response.getElementsByTagName("ListPrice").item(0).getTextContent();
+					}
+					catch (Exception e) {
+					}
+				}
+				if (price != null) {
+					price = price.substring(price.indexOf("$"));
+				}
 				url = url.substring(0, url.indexOf("/dp/")+14)+"/";
 				//AmazonURL genURL = new AmazonURL(upc); genURL.generateURL();
 				//String url = genURL.getURL();
@@ -195,6 +218,8 @@ public class AmazonPreprocessor extends Preprocessor{
 			this.getPreprocessingData().put("name", productName);
 		if (!this.getPreprocessingData().containsKey("similarProducts") && similarProductsList!=null && !similarProductsList.equals(""))
 			this.getPreprocessingData().put("similarProducts", similarProductsList);
+		if (!this.getPreprocessingData().containsKey("prices") && price!=null && !price.equals(""))
+			this.getPreprocessingData().put("prices", price);
 		this.done();
 		this.running = false;
 	}

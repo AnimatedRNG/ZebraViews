@@ -46,7 +46,7 @@ public class GooglePreprocessor extends Preprocessor {
 		
 		String title = (String) ((JSONObject) ((JSONObject) items.get(0)).
 				get("product")).get("title");
-		String prices = new String();
+		//String prices = new String();
 		String description = new String();
 		
 		for (int itemIndex = 0; itemIndex < items.size(); itemIndex++)
@@ -54,14 +54,14 @@ public class GooglePreprocessor extends Preprocessor {
 			JSONArray inventories = (JSONArray) ((JSONObject) 
 					((JSONObject) items.get(itemIndex)).get("product"))
 					.get("inventories");
-			prices += ((JSONObject) inventories.get(0)).get("price") + " ";
+			//prices += ((JSONObject) inventories.get(0)).get("price") + " ";
 			description += ((JSONObject)((JSONObject) items.get(itemIndex)).
 					get("product")).get("description")
 					+ GooglePreprocessor.DELIMITER;
 		}
 		
 		this.getPreprocessingData().put("title", title);
-		this.getPreprocessingData().put("prices", prices);
+		//this.getPreprocessingData().put("prices", prices);
 		this.getPreprocessingData().put("description", description);
 		this.done();
 	}
