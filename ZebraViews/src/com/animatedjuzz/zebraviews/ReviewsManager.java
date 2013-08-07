@@ -19,7 +19,6 @@ package com.animatedjuzz.zebraviews;
 
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import android.os.AsyncTask;
 import com.zebraviews.reviews.ReviewsCompiler;
 import com.zebraviews.reviews.ReviewsData;
 import com.zebraviews.reviews.preprocessor.PreprocessingData;
+import com.zebraviews.reviews.preprocessor.Preprocessor;
 
 public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 
@@ -140,6 +140,23 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 		}
 		
 		return bestPrice + "";
+	}
+	
+	public String getSuggestions() {
+		String labelAPI = 
+				this.getPreprocessedData("LabelAPI").get("similarProducts");
+		
+		String amazon = 
+				this.getPreprocessedData("Amazon").get("similarProducts");
+		
+		String suggestions = (amazon == null) ? labelAPI : amazon;
+		if (suggestions == null)
+			return null;
+		
+		suggestions = suggestions.replaceAll(Preprocessor.DELIMITER, "\n");
+		suggestions = "\n" + suggestions;
+		suggestions.trim();
+		return suggestions;
 	}
 	
 	public PreprocessingData getPreprocessedData(String name) {

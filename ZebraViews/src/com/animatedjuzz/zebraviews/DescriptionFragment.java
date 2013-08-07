@@ -36,6 +36,7 @@ public class DescriptionFragment extends SherlockFragment implements Description
 	private TextView bestPrice;
 	private TextView price;
 	private TextView allergens;
+	private TextView suggestions;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		this.bestPrice = (TextView) total.findViewById(R.id.best_price);
 		this.price = (TextView) total.findViewById(R.id.price);
 		this.allergens = (TextView) total.findViewById(R.id.allergens);
+		this.suggestions = (TextView) total.findViewById(R.id.suggestions);
 		
 		return total;
 	}
@@ -72,11 +74,18 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		this.bestPrice.setVisibility(View.VISIBLE);
 		this.price.setText("$" + manager.getBestPrice());
 		
-		String allergens = manager.getAllergens();
-		if (allergens != null && allergens.length() <= 2)
+		String allergen = manager.getAllergens();
+		if (allergen != null && allergen.length() >= 2)
 		{
-			this.allergens.append(" " + manager.getAllergens());
+			this.allergens.append(" " + allergen);
 			this.allergens.setVisibility(View.VISIBLE);
+		}
+		
+		String suggestion = manager.getSuggestions();
+		if (suggestion != null && suggestion.length() >= 2)
+		{
+			this.suggestions.append(" " + suggestion);
+			this.suggestions.setVisibility(View.VISIBLE);
 		}
 	}
 
