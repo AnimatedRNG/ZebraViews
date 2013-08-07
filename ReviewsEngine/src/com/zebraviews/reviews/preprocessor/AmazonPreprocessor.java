@@ -196,7 +196,7 @@ public class AmazonPreprocessor extends Preprocessor{
 						similarProductsList += Preprocessor.DELIMITER + similarProducts.item(i).getTextContent().substring(10); 
 					}
 				}
-				org.jsoup.nodes.Element overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
+				org.jsoup.nodes.Element overallRating = doc.select("span.asinreviewssummary.acr-popover").first();
 				overallRatingNum = Double.parseDouble(overallRating.text().substring(0, 3)) * 2;
 			} catch (Exception ex) {
 				
