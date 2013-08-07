@@ -20,7 +20,7 @@
     		android:layout_width="match_parent"
     		android:layout_height="match_parent" >
 
-    		<RelativeLayout
+    	<RelativeLayout
         		android:id="@+id/description_relLayout"
         		android:layout_width="match_parent"
         		android:layout_height="wrap_content" >
@@ -37,6 +37,7 @@
         		<RatingBar
             		android:id="@+id/ratings"
             		android:layout_width="wrap_content"
+            		android:focusable="false"
             		android:layout_height="wrap_content"
             		android:layout_below="@id/title"
             		android:layout_centerHorizontal="true"
@@ -44,43 +45,75 @@
             		android:visibility="invisible" />
         		
         		<TextView
-        		    android:id="@+id/description"
-        		    android:layout_width="wrap_content"
-        		    android:layout_height="wrap_content"
-        		    android:layout_below="@id/ratings"
-        		    android:layout_marginTop="10dp"
-        		    android:textStyle="italic" />
-        		
-        		<TextView
-        		    android:id="@+id/best_price"
-        		    android:layout_width="wrap_content"
-        		    android:layout_height="wrap_content"
-        		    android:layout_below="@id/description"
-        		    android:layout_marginTop="10dp"
-        		    android:text="@string/best_price"
-        		    android:textStyle="bold"
-        		    android:visibility="gone" />
+       				android:id="@+id/description"
+       				android:layout_below="@id/ratings"
+       				android:layout_width="wrap_content"
+       				android:layout_height="wrap_content"
+       				android:layout_marginTop="10dp"
+       				android:textStyle="italic" />
 
-        		<TextView
-        		    android:id="@+id/price"
-        		    android:maxLines="1"
+        		<TableLayout
         		    android:layout_width="wrap_content"
         		    android:layout_height="wrap_content"
-        		    android:layout_alignParentLeft="@id/best_price"
-        		    android:layout_alignParentBottom="true"
-        		    android:layout_toRightOf="@+id/best_price"
-        		    android:textStyle="italic" />
-        		
-        		<TextView
-        		    android:id="@+id/allergens"
-        		    android:maxLines="1"
-        		    android:layout_width="wrap_content"
-        		    android:layout_height="wrap_content"
-        		    android:layout_below="@id/best_price"
-        		    android:layout_marginTop="10dp"
-        		    android:text="@string/allergen_prefix"
-        		    android:visibility="gone"
-        		    android:textStyle="bold" />
+        		    android:layout_below="@id/description" >
+
+        		    <TableRow
+        		        android:id="@+id/price_row"
+        		        android:layout_width="wrap_content"
+        		        android:layout_height="wrap_content"
+        		        android:layout_marginTop="10dp" >
+        		        
+        		        <TextView
+        		    		android:id="@+id/best_price"
+        		    		android:layout_width="wrap_content"
+        		    		android:layout_height="wrap_content"
+        		    		android:text="@string/best_price"
+        		    		android:textStyle="bold"
+        		    		android:visibility="gone" />
+        		        
+        		        <TextView
+        		   			android:id="@+id/price"
+        		    		android:maxLines="1"
+        		    		android:layout_width="wrap_content"
+        		    		android:layout_height="wrap_content"
+        		    		android:textStyle="italic"
+        		    		android:visibility="visible" />
+        		        
+        		    </TableRow>
+
+        		    <TableRow
+        		        android:id="@+id/allergen_row"
+        		        android:layout_width="wrap_content"
+        		        android:layout_height="wrap_content" >
+        		        
+        		    	<TextView
+        		    		android:id="@+id/allergens"
+        		    		android:maxLines="1"
+        		    		android:layout_width="wrap_content"
+        		    		android:layout_height="wrap_content"
+        		    		android:layout_marginTop="10dp"
+        		    		android:text="@string/allergen_prefix"
+        		    		android:visibility="gone"
+        		    		android:textStyle="bold" />
+        		    
+        		    </TableRow>
+
+        		    <TableRow
+        		        android:id="@+id/suggestion_row"
+        		        android:layout_width="wrap_content"
+        		        android:layout_height="wrap_content" >
+        		        
+        		        <TextView
+        		    		android:id="@+id/suggestions"
+        		    		android:maxLines="1"
+        		    		android:layout_width="wrap_content"
+        		    		android:layout_height="wrap_content"
+        		    		android:text="@string/suggestion_prefix"
+        		    		android:visibility="gone"
+        		    		android:textStyle="italic" />
+        		        
+        		    </TableRow>
+        		</TableLayout>
 
     		</RelativeLayout>
 
