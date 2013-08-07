@@ -7,4 +7,5 @@
 	<string name="description_tab_title">Description</string>
 	<string name="best_price">Best Price:  </string>
 	<string name="allergen_prefix">This product contains: </string>
+	<string name="suggestion_prefix">Similar products: </string>
 </resources>
