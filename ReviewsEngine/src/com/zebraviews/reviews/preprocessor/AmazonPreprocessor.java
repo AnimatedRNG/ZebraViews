@@ -138,11 +138,10 @@ public class AmazonPreprocessor extends Preprocessor{
 			params.put("Operation", "ItemLookup");
 			if (upc.length() == 12)
 				params.put("IdType", "UPC");
-			else if (upc.length() == 10 || upc.length() == 13)
+			else// if (upc.length() == 10 || upc.length() == 13)
 				params.put("IdType", "ISBN");
 			params.put("SearchIndex", "All");
-			params.put("ItemId", this.getFetchThread().getCompiler().
-					getUPC());
+			params.put("ItemId", upc);
 			params.put("ResponseGroup", "Large");
 			params.put("AssociateTag", "zebra030-20");
 			try {
@@ -155,7 +154,13 @@ public class AmazonPreprocessor extends Preprocessor{
 				StreamResult res = new StreamResult(new StringWriter());
 				DOMSource src = new DOMSource(response);trans.transform(src, res);
 				productName = response.getElementsByTagName("Title").item(0).getTextContent();
-				description = response.getElementsByTagName("Content").item(0).getTextContent();
+				description = response.getElementsByTagName("Content").item(0).getTextContent()
+						.replace("<strong>", "").replace("<li>", "").replace("<ul>", "")
+						.replace("</strong>", "").replace("</li>", "").replace("</ul>", "")
+						.replace("<p>", "").replace("<b>", "").replace("<br>", "")
+						.replace("</b>", "").replace("</p>", "").replace("<i>", "")
+						.replace("</i>", "").replace("<a>", "").replace("</a>", "")
+						.replace("<ul id=list1\">", "");
 				String url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
 				//AmazonURL genURL = new AmazonURL(upc); genURL.generateURL();
 				//String url = genURL.getURL();
