@@ -162,6 +162,7 @@ public class AmazonPreprocessor extends Preprocessor{
 						.replace("</i>", "").replace("<a>", "").replace("</a>", "")
 						.replace("<ul id=list1\">", "");
 				String url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
+				url = url.substring(0, url.indexOf("/dp/")+14)+"/";
 				//AmazonURL genURL = new AmazonURL(upc); genURL.generateURL();
 				//String url = genURL.getURL();
 				org.jsoup.nodes.Document doc = Jsoup.connect(url).get();

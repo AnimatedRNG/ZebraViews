@@ -79,6 +79,7 @@ public class AmazonScraper implements Scraper {
 			StreamResult res = new StreamResult(new StringWriter());
 			DOMSource src = new DOMSource(response);trans.transform(src, res);
 			url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
+			url = url.substring(0, url.indexOf("/dp/")+14)+"/";
 		} catch (Exception ex) {
 			
 		}
