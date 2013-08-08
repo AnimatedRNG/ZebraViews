@@ -18,7 +18,9 @@
 package com.animatedjuzz.zebraviews;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -128,14 +130,14 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 				Arrays.asList(this.getPreprocessedData("Google").get("prices").
 				split("\\s+"));
 		
-		double bestPrice = Double.MAX_VALUE;
-		double mean = this.getMean(prices);
-		
+		double bestPrice = this.getHighestPrice(prices);
+		//double mean = this.getMean(prices);
+		double median = this.getMedian(prices);
 		for (String price : prices)
 		{
 			double priceVal = Double.parseDouble(price);
-			if (priceVal < bestPrice && (priceVal > mean/2 
-					&& priceVal < mean*2))
+			if (priceVal < bestPrice && (priceVal > median/2 
+					&& priceVal < median*2))
 				bestPrice = priceVal;
 		}
 		
@@ -168,6 +170,7 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 		
 		for (String price : data)
 		{
+			price.replace("$", "");
 			double priceVal = Double.parseDouble(price);
 			mean+=priceVal;
 		}
@@ -175,5 +178,38 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 		mean /= data.size();
 		
 		return mean;
+	}
+	
+	private double getMedian(List<String> data) {
+		double median = -1;
+		if (data.size() < 2) {
+			return median;
+		}
+		ArrayList<Double> temp = new ArrayList<Double>();
+		for (String price : data)
+		{
+			price.replace("$", "");
+			double priceVal = Double.parseDouble(price);
+			temp.add(priceVal);
+		}
+		Collections.sort(temp);
+		if (temp.size() % 2 == 0)
+			median = (temp.get(temp.size()/2) + temp.get(temp.size() / 2 - 1)) / 2;
+		else
+			median = temp.get(temp.size()/2);
+		return median;
+	}
+	private double getHighestPrice(List<String> data) {
+		double highestPrice;
+		ArrayList<Double> temp = new ArrayList<Double>();
+		for (String price : data)
+		{
+			price.replace("$", "");
+			double priceVal = Double.parseDouble(price);
+			temp.add(priceVal);
+		}
+		Collections.sort(temp);
+		highestPrice = temp.get(temp.size()-1);
+		return highestPrice;
 	}
 }
