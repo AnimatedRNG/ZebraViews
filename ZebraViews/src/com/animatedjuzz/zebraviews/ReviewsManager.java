@@ -124,7 +124,6 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 		return this.getPreprocessedData("Amazon").get("description");
 	}
 	
-	// Currently uses cheap culling
 	public String getBestPrice() {
 		List<String> prices =
 				Arrays.asList(this.getPreprocessedData("Google").get("prices").
@@ -136,8 +135,8 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 		for (String price : prices)
 		{
 			double priceVal = Double.parseDouble(price);
-			if (priceVal < bestPrice && (priceVal > median/2 
-					&& priceVal < median*2))
+			if (priceVal < bestPrice && (priceVal > median / 2 
+					&& priceVal < median * 2))
 				bestPrice = priceVal;
 		}
 		
@@ -199,6 +198,7 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 			median = temp.get(temp.size()/2);
 		return median;
 	}
+	
 	private double getHighestPrice(List<String> data) {
 		double highestPrice;
 		ArrayList<Double> temp = new ArrayList<Double>();

@@ -161,7 +161,7 @@ public class AmazonPreprocessor extends Preprocessor{
 						.replace("<p>", "").replace("<b>", "").replace("<br>", "")
 						.replace("</b>", "").replace("</p>", "").replace("<i>", "")
 						.replace("</i>", "").replace("<a>", "").replace("</a>", "")
-						.replace("<ul id=list1\">", "");
+						.replace("<ul id=list1\">", "").replace("<br />", "");
 				String url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
 				try {
 					price = response.getElementsByTagName("SalePrice").item(0).getTextContent();
