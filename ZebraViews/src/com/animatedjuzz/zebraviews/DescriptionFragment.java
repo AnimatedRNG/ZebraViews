@@ -19,7 +19,9 @@ package com.animatedjuzz.zebraviews;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -53,6 +55,14 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		this.progress.setVisibility(View.VISIBLE);
 		
 		this.ratings = (RatingBar) total.findViewById(R.id.ratings);
+		
+		this.ratings.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View arg0, MotionEvent arg1) {
+				return true;
+			}
+		});
+		
 		this.title = (TextView) total.findViewById(R.id.title);
 		this.description = (TextView) total.findViewById(R.id.description);
 		this.bestPrice = (TextView) total.findViewById(R.id.best_price);
