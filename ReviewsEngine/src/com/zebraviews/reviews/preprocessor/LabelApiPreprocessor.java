@@ -70,9 +70,7 @@ public class LabelApiPreprocessor extends Preprocessor {
 					((JSONObject) results).get("allergens"));
 			for (int j = 0; j < 15; j++)
 			{
-				if((((JSONObject) allergenResults.get(j)).get("allergen_value").equals("2"))
-						||((((String)((JSONObject) allergenResults.get(j)).get("allergen_name")).equals("Sesame Seeds")&&((JSONObject) allergenResults.get(j)).get("allergen_value").equals("1"))))
-				{
+				if (((Integer)((JSONObject) allergenResults.get(j)).get("allergen_value")).equals(new Integer(2))) {
 					allergens += (((String)((JSONObject) allergenResults.get(j)).get("allergen_name")).replace(" ", "_")) + " ";
 				}
 			}
