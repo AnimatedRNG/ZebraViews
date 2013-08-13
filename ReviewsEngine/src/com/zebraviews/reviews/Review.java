@@ -77,7 +77,7 @@ public class Review {
 	
 	@Override
 	public String toString() {
-		if(!title.equals(""))
+		if(!title.equals("")&&!title==null)
 			return "TITLE: " + this.getTitle() + "\nRATING: " + this.rating +/*"\nIndex: " + this.index + */"\n\nREVIEW: " + this.review + "\n";
 		else
 			return "No reviews found";
