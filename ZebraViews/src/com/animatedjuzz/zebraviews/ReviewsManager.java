@@ -140,7 +140,11 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 				bestPrice = priceVal;
 		}
 		
-		return bestPrice + "";
+		String amazon = this.getPreprocessedData("Amazon").get("prices");
+		if (amazon != null)
+			return amazon.substring(1);
+		else
+			return bestPrice + "";
 	}
 	
 	public String getSuggestions() {
