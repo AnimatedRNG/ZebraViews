@@ -125,26 +125,36 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 	}
 	
 	public String getBestPrice() {
-		List<String> prices =
-				Arrays.asList(this.getPreprocessedData("Google").get("prices").
-				split("\\s+"));
 		
-		double bestPrice = this.getHighestPrice(prices);
-		//double mean = this.getMean(prices);
-		double median = this.getMedian(prices);
-		for (String price : prices)
+		String googlePriceRaw = this.getPreprocessedData("Google").
+				get("prices");
+		
+		double bestPrice = -1.0D;
+		
+		if (googlePriceRaw != null)
 		{
-			double priceVal = Double.parseDouble(price);
-			if (priceVal < bestPrice && (priceVal > median / 2 
-					&& priceVal < median * 2))
-				bestPrice = priceVal;
+			List<String> prices =
+				Arrays.asList(googlePriceRaw.split("\\s+"));
+		
+			bestPrice = this.getHighestPrice(prices);
+			//double mean = this.getMean(prices);
+			double median = this.getMedian(prices);
+			for (String price : prices)
+			{
+				double priceVal = Double.parseDouble(price);
+				if (priceVal < bestPrice && (priceVal > median / 2 
+						&& priceVal < median * 2))
+					bestPrice = priceVal;
+			}
 		}
 		
 		String amazon = this.getPreprocessedData("Amazon").get("prices");
 		if (amazon != null)
 			return amazon.substring(1);
-		else
+		else if (googlePriceRaw != null || bestPrice == -1.0D)
 			return bestPrice + "";
+		else
+			return null;
 	}
 	
 	public String getSuggestions() {

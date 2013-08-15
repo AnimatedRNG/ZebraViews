@@ -82,6 +82,10 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		this.title.setText(manager.getProductName());
 		this.description.setText(manager.getProductDescription());
 		this.bestPrice.setVisibility(View.VISIBLE);
+		
+		if (manager.getBestPrice() == null)
+			this.price.setText("Price not found"); // add to strings file
+		
 		this.price.setText("$" + manager.getBestPrice());
 		
 		String allergen = manager.getAllergens();

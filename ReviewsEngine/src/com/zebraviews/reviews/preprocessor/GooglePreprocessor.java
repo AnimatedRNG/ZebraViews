@@ -38,8 +38,14 @@ public class GooglePreprocessor extends Preprocessor {
 
 	@Override
 	public void onPreExecute() {
-		JSONArray items = (JSONArray) JSONRequest.getRequest(searchString + 
+		JSONArray items = null;
+		try {
+			items = (JSONArray) JSONRequest.getRequest(searchString + 
 				this.getFetchThread().getCompiler().getUPC()).get("items");
+		} catch (NullPointerException p) {
+			this.done();
+			return;
+		}
 		
 		if (items == null || items.size() == 0)
 			return;
