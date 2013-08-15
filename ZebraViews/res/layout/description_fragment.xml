@@ -52,22 +52,24 @@
        				android:layout_marginTop="10dp"
        				android:textStyle="italic" />
 
-        		<TableLayout
+        		<LinearLayout
         		    android:layout_width="wrap_content"
         		    android:layout_height="wrap_content"
-        		    android:layout_below="@id/description" >
+        		    android:layout_below="@id/description"
+        		    android:orientation="vertical" >
 
-        		    <TableRow
+        		    <LinearLayout
         		        android:id="@+id/price_row"
         		        android:layout_width="wrap_content"
-        		        android:layout_height="wrap_content" >
+        		        android:layout_height="wrap_content"
+        		        android:layout_marginTop="10dp"
+        		        android:orientation="horizontal" >
         		        
         		        <TextView
         		    		android:id="@+id/best_price"
         		    		android:layout_width="wrap_content"
         		    		android:layout_height="wrap_content"
         		    		android:text="@string/best_price"
-        		    		android:layout_marginTop="10dp"
         		    		android:textStyle="bold"
         		    		android:visibility="gone" />
         		        
@@ -76,46 +78,33 @@
         		    		android:maxLines="1"
         		    		android:layout_width="wrap_content"
         		    		android:layout_height="wrap_content"
-        		    		android:layout_marginTop="10dp"
         		    		android:textStyle="italic"
-        		    		android:visibility="visible" />
+        		    		android:visibility="visible"
+        		    		android:padding="2dip" />
         		        
-        		    </TableRow>
-
-        		    <TableRow
-        		        android:id="@+id/allergen_row"
-        		        android:layout_width="wrap_content"
-        		        android:layout_height="wrap_content" >
+        		    </LinearLayout>
         		        
-        		    	<TextView
-        		    		android:id="@+id/allergens"
-        		    		android:maxLines="1"
-        		    		android:layout_width="wrap_content"
-        		    		android:layout_height="wrap_content"
-        		    		android:layout_marginTop="10dp"
-        		    		android:text="@string/allergen_prefix"
-        		    		android:visibility="gone"
-        		    		android:textStyle="bold" />
-        		    
-        		    </TableRow>
-
-        		    <TableRow
-        		        android:id="@+id/suggestion_row"
-        		        android:layout_width="wrap_content"
-        		        android:layout_height="wrap_content" >
+        		    <TextView
+        		    	android:id="@+id/allergens"
+        		    	android:maxLines="1"
+        		    	android:layout_width="wrap_content"
+        		    	android:layout_height="wrap_content"
+        		    	android:layout_marginTop="10dp"
+        		    	android:text="@string/allergen_prefix"
+        		    	android:visibility="gone"
+        		    	android:textStyle="bold" />
         		        
-        		        <TextView
-        		    		android:id="@+id/suggestions"
-        		    		android:maxLines="20"
-        		    		android:layout_width="wrap_content"
-        		    		android:layout_height="wrap_content"
-        		    		android:layout_marginTop="10dp"
-        		    		android:text="@string/suggestion_prefix"
-        		    		android:visibility="gone"
-        		    		android:textStyle="italic" />
-        		        
-        		    </TableRow>
-        		</TableLayout>
+					<TextView
+        		    	android:id="@+id/suggestions"
+        		    	android:maxLines="20"
+        		    	android:layout_width="wrap_content"
+        		    	android:layout_height="wrap_content"
+        		    	android:layout_marginTop="10dp"
+        		    	android:text="@string/suggestion_prefix"
+        		    	android:visibility="gone"
+        		    	android:textStyle="italic" />
+					        		       
+        		</LinearLayout>
 
     		</RelativeLayout>
 
