@@ -93,16 +93,23 @@
         		    	android:text="@string/allergen_prefix"
         		    	android:visibility="gone"
         		    	android:textStyle="bold" />
-        		        
-					<TextView
-        		    	android:id="@+id/suggestions"
-        		    	android:maxLines="20"
+
+        		    <TextView
+        		    	android:id="@+id/suggestion_label"
         		    	android:layout_width="wrap_content"
         		    	android:layout_height="wrap_content"
         		    	android:layout_marginTop="10dp"
         		    	android:text="@string/suggestion_prefix"
         		    	android:visibility="gone"
-        		    	android:textStyle="italic" />
+        		    	android:textStyle="bold" />
+        		    
+					<TextView
+        		    	android:id="@+id/suggestions"
+        		    	android:maxLines="20"
+        		    	android:layout_width="wrap_content"
+        		    	android:layout_height="wrap_content"
+        		    	android:layout_marginTop="2dp"
+        		    	android:visibility="gone" />
 					        		       
         		</LinearLayout>
 

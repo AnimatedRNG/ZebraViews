@@ -39,6 +39,7 @@ public class DescriptionFragment extends SherlockFragment implements Description
 	private TextView price;
 	private TextView allergens;
 	private TextView suggestions;
+	private TextView suggestionsLabel;
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		this.bestPrice = (TextView) total.findViewById(R.id.best_price);
 		this.price = (TextView) total.findViewById(R.id.price);
 		this.allergens = (TextView) total.findViewById(R.id.allergens);
+		this.suggestionsLabel = (TextView) total.findViewById(R.id.suggestion_label);
 		this.suggestions = (TextView) total.findViewById(R.id.suggestions);
 		
 		return total;
@@ -98,7 +100,8 @@ public class DescriptionFragment extends SherlockFragment implements Description
 		String suggestion = manager.getSuggestions();
 		if (suggestion != null && suggestion.length() >= 2)
 		{
-			this.suggestions.append(" " + suggestion);
+			this.suggestionsLabel.setVisibility(View.VISIBLE);
+			this.suggestions.setText(suggestion);
 			this.suggestions.setVisibility(View.VISIBLE);
 		}
 	}

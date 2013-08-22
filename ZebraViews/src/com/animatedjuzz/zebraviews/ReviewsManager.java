@@ -169,7 +169,6 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 			return null;
 		
 		suggestions = suggestions.replaceAll(Preprocessor.DELIMITER, "\n");
-		suggestions = "\n" + suggestions;
 		suggestions.trim();
 		return suggestions;
 	}
