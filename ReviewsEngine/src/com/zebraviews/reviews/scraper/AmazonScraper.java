@@ -60,13 +60,17 @@ public class AmazonScraper implements Scraper {
 		} catch(Exception e){
 
 		}
+		String upc = this.fetchThread.getReviewsCompiler().getUPC();
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("Service", "AWSECommerceService");
 		params.put("Version", "2013-8-2");
 		params.put("Operation", "ItemLookup");
-		params.put("IdType", "UPC");
+		if (upc.length() == 12)
+			params.put("IdType", "UPC");
+		else
+			params.put("IdType", "ISBN");
 		params.put("SearchIndex", "All");
-		params.put("ItemId", this.fetchThread.getReviewsCompiler().getUPC());
+		params.put("ItemId", upc);
 		params.put("ResponseGroup", "Large");
 		params.put("AssociateTag", "zebra030-20");
 		try {
@@ -81,7 +85,7 @@ public class AmazonScraper implements Scraper {
 			url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
 			url = url.substring(0, url.indexOf("/dp/")+14)+"/";
 		} catch (Exception ex) {
-			AmazonURL address = new AmazonURL(this.fetchThread.getReviewsCompiler().getUPC());
+			AmazonURL address = new AmazonURL(upc);
 			address.generateURL();
 			url = address.getURL();
 		}
@@ -97,7 +101,7 @@ public class AmazonScraper implements Scraper {
 				overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
 				if(overallRating==null)
 				{	
-					AmazonURL address = new AmazonURL(this.fetchThread.getReviewsCompiler().getUPC());
+					AmazonURL address = new AmazonURL(upc);
 					address.generateURL();
 					String url2 = address.getURL();
 					doc = Jsoup.connect(url).get();
@@ -114,10 +118,9 @@ public class AmazonScraper implements Scraper {
 				}
 				double overallRatingNum = Double.parseDouble(overallRating.text().
 						substring(0,3))*2;
-				Elements reviews = doc.select("#revMHRL .mt9.reviewtext");
-				Elements titles = doc.select("#revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
+				Elements reviews = doc.select(".reviews #revMHRL .mt9.reviewtext");
+				Elements titles = doc.select(".reviews #revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
 				Elements ratings = doc.select("div.mt4.ttl");
-				//System.out.println("here");
 				while (this.reviewCount < reviews.size())
 				{
 					String title = titles.get(this.reviewCount).text();
