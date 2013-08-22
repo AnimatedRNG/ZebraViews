@@ -26,6 +26,7 @@ import java.util.List;
 
 import android.os.AsyncTask;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.zebraviews.reviews.ReviewsCompiler;
 import com.zebraviews.reviews.ReviewsData;
 import com.zebraviews.reviews.preprocessor.PreprocessingData;
@@ -168,7 +169,13 @@ public class ReviewsManager extends AsyncTask<Void, ReviewsData, Void> {
 		if (suggestions == null)
 			return null;
 		
-		suggestions = suggestions.replaceAll(Preprocessor.DELIMITER, "\n");
+		String bullet = ((SherlockFragment)this.description).getResources().
+				 getString(R.string.bullet) + "\t";
+		
+		suggestions = bullet + suggestions;
+		
+		suggestions = suggestions.replaceAll(Preprocessor.DELIMITER, "\n"
+				 + bullet);
 		suggestions.trim();
 		return suggestions;
 	}
