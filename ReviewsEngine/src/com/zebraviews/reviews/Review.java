@@ -80,6 +80,6 @@ public class Review {
 		if(!title.equals("") && title != null)
 			return "TITLE: " + this.getTitle() + "\nRATING: " + this.rating +/*"\nIndex: " + this.index + */"\n\nREVIEW: " + this.review + "\n";
 		else
-			return "No reviews found--4";
+			return "No reviews found--titles unseccessfully scraped";
 	}
 }

@@ -105,7 +105,7 @@ public class AmazonScraper implements Scraper {
 				}
 				if(overallRating==null)
 				{
-					Review rev= new Review("No reviews found--3", 0, reviewCount);
+					Review rev= new Review("No reviews found--overallRating unsuccessfully scraped", 0, reviewCount);
 					rev.setTitle("");
 					rev.setRating(0);
 					this.fetchThread.addReview(rev);					
@@ -149,7 +149,7 @@ public class AmazonScraper implements Scraper {
 				{
 					if(overallRating==null)
 					{	
-						Review rev= new Review("No reviews found--1", 0, reviewCount);
+						Review rev= new Review("No reviews found--overallRating unsuccessfully scraped", 0, reviewCount);
 						rev.setTitle("");
 						rev.setRating(0);
 						this.fetchThread.addReview(rev);					
