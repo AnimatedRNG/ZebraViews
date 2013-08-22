@@ -58,7 +58,7 @@ public class AmazonScraper implements Scraper {
 		try {
 			helper = SignedRequestsHelper.getInstance("ecs.amazonaws.com", "AKIAJYAME7RKTOR2CI5Q", "YoTVtzH1OSV2/V+sEXrX6FJQ7Isl7npmhCgFHUG9");
 		} catch(Exception e){
-			
+
 		}
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("Service", "AWSECommerceService");
@@ -81,7 +81,9 @@ public class AmazonScraper implements Scraper {
 			url = response.getElementsByTagName("DetailPageURL").item(0).getTextContent();
 			url = url.substring(0, url.indexOf("/dp/")+14)+"/";
 		} catch (Exception ex) {
-			
+			AmazonURL address = new AmazonURL(this.fetchThread.getReviewsCompiler().getUPC());
+			address.generateURL();
+			url = address.getURL();
 		}
 		Element overallRating = null;
 		if(url==null)
@@ -95,7 +97,15 @@ public class AmazonScraper implements Scraper {
 				overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
 				if(overallRating==null)
 				{	
-					Review rev= new Review("No reviews found", 0, reviewCount);
+					AmazonURL address = new AmazonURL(this.fetchThread.getReviewsCompiler().getUPC());
+					address.generateURL();
+					String url2 = address.getURL();
+					doc = Jsoup.connect(url).get();
+					overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
+				}
+				if(overallRating==null)
+				{
+					Review rev= new Review("No reviews found--3", 0, reviewCount);
 					rev.setTitle("");
 					rev.setRating(0);
 					this.fetchThread.addReview(rev);					
@@ -107,6 +117,7 @@ public class AmazonScraper implements Scraper {
 				Elements reviews = doc.select("#revMHRL .mt9.reviewtext");
 				Elements titles = doc.select("#revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
 				Elements ratings = doc.select("div.mt4.ttl");
+				//System.out.println("here");
 				while (this.reviewCount < reviews.size())
 				{
 					String title = titles.get(this.reviewCount).text();
@@ -138,7 +149,7 @@ public class AmazonScraper implements Scraper {
 				{
 					if(overallRating==null)
 					{	
-						Review rev= new Review("No reviews found", 0, reviewCount);
+						Review rev= new Review("No reviews found--1", 0, reviewCount);
 						rev.setTitle("");
 						rev.setRating(0);
 						this.fetchThread.addReview(rev);					
@@ -150,7 +161,7 @@ public class AmazonScraper implements Scraper {
 		}
 		else
 		{
-			Review rev= new Review("No reviews found", 0, reviewCount);
+			Review rev= new Review("No reviews found--2", 0, reviewCount);
 			rev.setTitle("");
 			rev.setRating(0);
 			this.fetchThread.addReview(rev);
