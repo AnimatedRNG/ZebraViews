@@ -49,10 +49,12 @@ public class AmazonScraper implements Scraper {
 	private boolean complete;
 	private int reviewCount = 0;
 	private ReviewFetchThread fetchThread;
+	private int timesRun = 0;
 
 	@Override
 	public void run()
 	{
+		Boolean rating_flag = false;
 		String url = null;
 		SignedRequestsHelper helper = null;
 		try {
@@ -94,20 +96,23 @@ public class AmazonScraper implements Scraper {
 			url = "No ASIN found";
 		if(!url.equals("No ASIN found"))
 		{
-			int i = 0;
 			try
 			{
 				Document doc = Jsoup.connect(url).get();
 				overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
-				if(overallRating==null)
+				if(overallRating == null)
 				{	
 					AmazonURL address = new AmazonURL(upc);
 					address.generateURL();
 					String url2 = address.getURL();
-					doc = Jsoup.connect(url).get();
+					doc = Jsoup.connect(url2).get();
 					overallRating = doc.select(".reviews div.gry.txtnormal.acrrating").first();
 				}
-				if(overallRating==null)
+				if (overallRating == null)
+				{
+					overallRating = doc.select("#avgRating").first();
+				}
+				if(overallRating == null)
 				{
 					Review rev= new Review("No reviews found--overallRating unsuccessfully scraped", 0, reviewCount);
 					rev.setTitle("");
@@ -119,16 +124,37 @@ public class AmazonScraper implements Scraper {
 				double overallRatingNum = Double.parseDouble(overallRating.text().
 						substring(0,3))*2;
 				Elements reviews = doc.select(".reviews #revMHRL .mt9.reviewtext");
-				Elements titles = doc.select(".reviews #revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
-				Elements ratings = doc.select("div.mt4.ttl");
-				while (this.reviewCount < reviews.size())
+				if (reviews == null)
 				{
+					reviews = doc.select("#revMHRL div.a-section div.a-section");
+				}
+				Elements titles = doc.select(".reviews #revMHRL .txtlarge.gl3.gr4.reviewTitle.valignMiddle");
+				if (titles == null)
+				{
+					titles = doc.select("#revMHRL div.a-section span.a-size-base.a-text-bold");
+				}
+				Elements ratings = doc.select("div.mt4.ttl");
+				if (ratings == null)
+				{
+					rating_flag = true;
+					ratings = doc.select("#revMHRL div.a-section a.a-link-normal.a-text-normal.a-color-base");
+				}
+				while (this.reviewCount < reviews.size())				
+				{
+					int rating = 0;
 					String title = titles.get(this.reviewCount).text();
 					String review = reviews.get(this.reviewCount).text();
-					int rating = (int) (2 * Double.parseDouble(ratings.get
+					if (rating_flag)
+					{
+						rating = (int) (2 * Double.parseDouble(ratings.get
+							(reviewCount).attr("title").substring(0, 3)));
+					}
+					else
+					{
+						rating = (int) (2 * Double.parseDouble(ratings.get
 							(reviewCount).text().substring(0, 3)));
+					}	
 					review = review.replace("Read more ›", "");
-
 					// Amazon's reviews are out of 5
 					Review rev = new Review(review,rating, reviewCount);
 					rev.setTitle(title);
@@ -143,9 +169,9 @@ public class AmazonScraper implements Scraper {
 				}
 			}
 			catch (IOException e) {
-				if(i<6)
+				if(timesRun < 6)
 				{
-					i++;
+					timesRun++;
 					this.run();
 				}
 				else
