@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='us-ascii'?>
+
+<!-- Using tester port for now -->
+<!-- Use localhost to test on your own computer -->
+
+<Server 
+	port="55016"
+	server_ip="localhost"
+	>
+</Server>
