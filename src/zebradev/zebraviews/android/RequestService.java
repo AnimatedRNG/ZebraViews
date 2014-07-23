@@ -45,7 +45,7 @@ public class RequestService extends Service {
 		
 		if (connected == false)
 		{
-			this.networkingThread = new Thread(new LoginTask(this.getAssets()));
+			this.networkingThread = new Thread(new ConnectTask(this.getAssets()));
 			this.networkingThread.start();
 			this.connected = true;
 		}
@@ -69,11 +69,11 @@ public class RequestService extends Service {
 		return this.connected;
 	}
 	
-	public class LoginTask implements Runnable {
+	public class ConnectTask implements Runnable {
 
 		private AssetManager assets;
 		
-		public LoginTask(AssetManager assets) {
+		public ConnectTask(AssetManager assets) {
 			this.assets = assets;
 		}
 		
