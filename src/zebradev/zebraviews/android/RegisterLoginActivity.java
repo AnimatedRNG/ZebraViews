@@ -35,6 +35,7 @@ public class RegisterLoginActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
+		new TemplateEula(this).show();
 	}
 	
 	@Override

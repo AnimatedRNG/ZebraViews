@@ -142,4 +142,8 @@
   <string name="additional_registration_info">Placeholder text for more important registration info</string>
   <string name="register_button_text">Register</string>
   <string name="zebra_picture_description">It\'s a ZEBRA</string>
+  <string name="accept">I accept</string>
+  <string name="decline">I decline</string>
+  <string name="updates">UPDATES: none</string>
+  <string name="eula">insert eula here</string>
 </resources>
