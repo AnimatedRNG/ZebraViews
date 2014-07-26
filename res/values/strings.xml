@@ -148,7 +148,7 @@
   <string name="no_network_access">Cannot access network</string>
   <string name="registering">Registering...</string>
   <string name="incorrect_username_register">Username already taken</string>
-   <string name="accept">I accept</string>
+  <string name="accept">I accept</string>
   <string name="decline">I decline</string>
   <string name="updates">UPDATES: none</string>
   <string name="eula">insert eula here</string>
