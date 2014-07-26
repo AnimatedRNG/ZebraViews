@@ -56,6 +56,8 @@ public class RegisterLoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		
+		new TemplateEula(this).show();
+		
 		this.username = (EditText) findViewById(R.id.username);
 		this.password = (EditText) findViewById(R.id.password);
 		this.progress = new ProgressDialog(this);
