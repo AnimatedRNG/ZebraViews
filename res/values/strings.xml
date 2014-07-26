@@ -142,4 +142,10 @@
   <string name="additional_registration_info">Placeholder text for more important registration info</string>
   <string name="register_button_text">Register</string>
   <string name="zebra_picture_description">It\'s a ZEBRA</string>
+  <string name="incorrect_length">Username or password too long or too short</string>
+  <string name="failed_to_connect">Failed to connect to server</string>
+  <string name="connecting">Connecting...</string>
+  <string name="no_network_access">Cannot access network</string>
+  <string name="registering">Registering...</string>
+  <string name="incorrect_username_register">Username already taken</string>
 </resources>
