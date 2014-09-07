@@ -11,12 +11,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,13 +30,17 @@ public class RegisterLoginActivity extends Activity {
 
 	private boolean bound;
 	private RequestService service;
+	private RegisterLoginTask register;
 	
-	private EditText username;
-	private EditText password;
+	protected EditText username;
+	protected EditText password;
+	
+	protected String usernameText;
+	protected String passwordText;
 	
 	private ProgressDialog progress;
 	
-	private static final int CHECK_TIME_LENGTH = 100;
+	public static final int CHECK_TIME_LENGTH = 100;
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -43,6 +49,12 @@ public class RegisterLoginActivity extends Activity {
 			RegisterLoginActivity.this.bound = true;
 			RegisterLoginActivity.this.service =
 					((RequestService.RequestBinder) service).getBoundService();
+			
+			RegisterLoginActivity.this.register = new RegisterLoginTask(RegisterLoginActivity.this);
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(RegisterLoginActivity.this);
+			if (prefs.getString("username", null) != null && prefs.getString("password", null) != null)
+				RegisterLoginActivity.this.register.execute(prefs.getString("username", null),
+						prefs.getString("password", null), "");
 		}
 
 		@Override
@@ -63,6 +75,7 @@ public class RegisterLoginActivity extends Activity {
 		this.progress = new ProgressDialog(this);
 		this.progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		this.progress.setIndeterminate(true);
+		this.progress.setCancelable(false);
 	}
 	
 	@Override
@@ -70,15 +83,28 @@ public class RegisterLoginActivity extends Activity {
 		super.onStart();
 		
 		Log.setLogger(new ZebraAndroidLogger());
+		
 		Intent launchService = new Intent(this, RequestService.class);
 		startService(launchService);
 		bindService(launchService, mConnection, Context.BIND_AUTO_CREATE);
 	}
 	
 	@Override
+	public void onPause() {
+		super.onPause();
+		//this.register.cancel(true);
+	}
+	
+	@Override
 	public void onStop() {
 		super.onStop();
 		unbindService(mConnection);
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		stopService(new Intent(this, RequestService.class));
 	}
 	
 	public void register(View v) {
@@ -94,24 +120,27 @@ public class RegisterLoginActivity extends Activity {
 					Toast.LENGTH_LONG).show();
 			return;
 		}
-		
-		RegisterTask register = new RegisterTask(this);
-		register.execute(username, password);
+			
+		this.register = new RegisterLoginTask(this);
+		this.register.execute(username, password);
 	}
 	
-	private class RegisterTask extends AsyncTask<String, String, Boolean> implements RequestListener {
+	private class RegisterLoginTask extends AsyncTask<String, String, Boolean> implements RequestListener {
 
 		private RegisterLoginActivity activity;
 		private boolean signupResponseReceived;
 		private boolean registered;
 		
-		public RegisterTask(RegisterLoginActivity registerLoginActivity) {
+		private boolean loginResponseReceived;
+		private boolean loggedIn;
+		
+		public RegisterLoginTask(RegisterLoginActivity registerLoginActivity) {
 			this.activity = registerLoginActivity;
 		}
 		
 		@Override
 		protected Boolean doInBackground(String... params) {
-			this.activity.service.setListener(this);
+			this.activity.service.addListener(this);
 			this.publishProgress(this.activity.getResources().
 					getString(R.string.connecting));
 			this.activity.service.connect();
@@ -128,26 +157,53 @@ public class RegisterLoginActivity extends Activity {
 				
 				return null;
 			}
-			this.publishProgress(this.activity.getResources().getString(R.string.registering));
-			this.activity.service.signup(params[0], params[1]);
+			
+			boolean login = false;
+			if (params.length == 2)
+				this.activity.service.signup(params[0], params[1]);
+			else
+			{
+				this.activity.service.login(params[0], params[1]);
+				login = true;
+			}
+			
+			this.activity.usernameText = params[0];
+			this.activity.passwordText = params[1];
+			
+			if (login)
+				this.publishProgress(this.activity.getResources().getString(R.string.logging_in));
+			else
+				this.publishProgress(this.activity.getResources().getString(R.string.registering));
 			
 			for (int t = 0; t < RequestService.CONNECTION_TIMEOUT / RegisterLoginActivity.CHECK_TIME_LENGTH; t++)
 			{
-				if (this.signupResponseReceived)
+				if (this.signupResponseReceived || this.loginResponseReceived)
 				{
-					if (registered)
+					if (this.registered || this.loggedIn)
 						return true;
 					else
 					{
-						String message = this.activity.getResources().getString(R.string.incorrect_username_register);
+						String message = null;
+						if (!login)
+							message = this.activity.getResources().getString(R.string.incorrect_username_register);
+						else
+							message = this.activity.getResources().getString(R.string.incorrect_username_login);
+						
+						SharedPreferences prefs = 
+								PreferenceManager.getDefaultSharedPreferences(RegisterLoginActivity.this);
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.remove("username"); editor.remove("password");
+						editor.commit();
+						
 						this.publishProgress(new String(), message);
+						this.activity.service.disconnect();
 						return false;
 					}
 				}
 				try {
 					Thread.sleep(RegisterLoginActivity.CHECK_TIME_LENGTH);
 				} catch (InterruptedException e) {
-					Log.error("Interrupted while waiting for signup", e);
+					Log.error("Interrupted while waiting for signup/login", e);
 					return null;
 				}
 			}
@@ -183,11 +239,23 @@ public class RegisterLoginActivity extends Activity {
 			if (boolObj == null)
 				return;
 			
-			if (boolObj == true)
+			if (boolObj)
 			{
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(RegisterLoginActivity.this);
+				if (this.registered)
+				{
+					SharedPreferences.Editor editor = prefs.edit();
+					editor.putString("username", this.activity.usernameText);
+					editor.putString("password", this.activity.passwordText);
+					editor.commit();
+				}
+				
+				Intent intent = new Intent(this.activity, ScannerActivity.class);
+				this.activity.startActivity(intent);
+				
 				this.activity.progress.dismiss();
 				
-				// Open new activity here
+				this.activity.finish();
 			}
 			
 		}
@@ -224,6 +292,14 @@ public class RegisterLoginActivity extends Activity {
 			}
 			else
 			{
+				if (response.get("type").equals(Requests.LOGIN_RESPONSE.value))
+				{
+					this.loginResponseReceived = true;
+					if (response.get("status").equals(Requests.STATUS_SUCCESS.value))
+						this.loggedIn = true;
+					else
+						this.loggedIn = false;
+				}
 				// No idea how we would get any other response....
 			}
 		}

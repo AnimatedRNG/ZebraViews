@@ -1,8 +1,11 @@
 package zebradev.zebraviews.android;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import zebradev.zebraviews.common.Requests;
 import zebradev.zebraviews.fakeclient.ClientManager;
 import zebradev.zebraviews.processor.Product;
 import zebradev.zebraviews.server.DatabaseManager;
@@ -17,9 +20,9 @@ import com.esotericsoftware.minlog.Log;
 
 public class RequestService extends Service {
 	
-	public ConcurrentLinkedQueue<TreeMap<String, Object>> treeMapQueue;
+	//public ConcurrentLinkedQueue<TreeMap<String, Object>> treeMapQueue;
 	private ClientManager clientManager;
-	private RequestListener listener;
+	private ResponseHandler handler;
 	public boolean connected;
 	public boolean failedToConnect;
 	
@@ -30,7 +33,8 @@ public class RequestService extends Service {
 	public static final int CONNECTION_TIMEOUT = 8500;
 	
 	public RequestService() {
-		this.treeMapQueue = new ConcurrentLinkedQueue<TreeMap<String, Object>>();
+		//this.treeMapQueue = new ConcurrentLinkedQueue<TreeMap<String, Object>>();
+		this.handler = new ResponseHandler();
 	}
 	
 	@Override
@@ -51,7 +55,7 @@ public class RequestService extends Service {
 		if (connected == false)
 		{
 			try {
-				this.clientManager = new ClientManager(new ResponseHandler(this.listener),
+				this.clientManager = new ClientManager(new Listener.ThreadedListener(this.handler),
 						this.getAssets().open(SERVER_CONFIG_FILE),
 						this.getAssets().open(CLIENT_CONFIG_FILE));
 			} catch (Exception e) {
@@ -80,6 +84,10 @@ public class RequestService extends Service {
 		this.clientManager.signup(username, password);
 	}
 	
+	public synchronized void productSearch(String productType, String productCode) {
+		this.clientManager.sendProductSearchRequest(productType, productCode);
+	}
+	
 	// Other methods
 	
 	public boolean verifyValidity(String username, String password, String details) {
@@ -94,49 +102,70 @@ public class RequestService extends Service {
 		return false;
 	}
 	
-	public RequestListener getListener() {
-		return this.listener;
+	public List<RequestListener> getListeners(int index) {
+		return this.handler.getRequestListeners();
 	}
 	
-	public void setListener(RequestListener listener) {
-		this.listener = listener;
+	public void addListener(RequestListener listener) {
+		this.handler.addRequestListener(listener);
+	}
+	
+	public void removeListener(RequestListener listener) {
+		this.handler.removeRequestListener(listener);
 	}
 	
 	public class ResponseHandler extends Listener {
 		
-		private RequestListener requestListener;
+		private List<RequestListener> requestListeners;
 		
-		public ResponseHandler(RequestListener listener) {
-			this.setRequestListener(listener);
+		public ResponseHandler(RequestListener... listeners) {
+			this.requestListeners = new ArrayList<RequestListener>();
+			this.addRequestListener(listeners);
+		}
+		
+		public ResponseHandler(List<RequestListener> listeners) {
+			this.requestListeners = new ArrayList<RequestListener>(); 
+			for (RequestListener r : listeners)
+				this.requestListeners.add(r);
 		}
 
-		public RequestListener getRequestListener() {
-			return requestListener;
+		public List<RequestListener> getRequestListeners() {
+			return requestListeners;
 		}
 
-		public void setRequestListener(RequestListener requestListener) {
-			this.requestListener = requestListener;
+		public void addRequestListener(RequestListener... requestListener) {
+			for (RequestListener r : requestListener)
+				this.requestListeners.add(r);
+		}
+		
+		public void removeRequestListener(RequestListener r) {
+			this.requestListeners.remove(r);
 		}
 		
 		@Override
 		public void connected(Connection connection) {
-			this.requestListener.onConnect(connection);
+			for (RequestListener r : this.requestListeners)
+				r.onConnect(connection);
 		}
 		
 		@Override
 		public void disconnected(Connection connection) {
-			this.requestListener.onDisconnect(connection);
+			for (RequestListener r : this.requestListeners)
+				r.onDisconnect(connection);
 		}
 		
 		@SuppressWarnings("unchecked")
 		@Override
 		public void received(Connection connection, Object object) {
-			if (object instanceof TreeMap)
-				this.requestListener.onTreeMapReceived(connection, (TreeMap<String, Object>) object);
-			else if (object instanceof Product)
-				this.requestListener.onProductReceived(connection, (Product) object);
-			else
-				this.requestListener.onOtherReceived(connection, object);
+			for (RequestListener r : this.requestListeners)
+			{
+				if (object instanceof TreeMap)
+					r.onTreeMapReceived(connection, (TreeMap<String, Object>) object);
+				else if (object instanceof Product)
+					r.onProductReceived(connection, (Product) object);
+				else
+					r.onOtherReceived(connection, object);
+			}
 		}
 	}
 }

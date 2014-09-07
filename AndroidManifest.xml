@@ -56,7 +56,11 @@
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden" >
       	</activity>
-      	
+      	<activity 
+            android:name=".ResultsActivity"
+            android:screenOrientation="portrait" >
+      	</activity>
+        
         <service
             android:name=".RequestService"
             android:label="@string/app_name"

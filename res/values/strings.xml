@@ -148,8 +148,15 @@
   <string name="no_network_access">Cannot access network</string>
   <string name="registering">Registering...</string>
   <string name="incorrect_username_register">Username already taken</string>
-   <string name="accept">I accept</string>
+  <string name="accept">I accept</string>
   <string name="decline">I decline</string>
   <string name="updates">UPDATES: none</string>
   <string name="eula">insert eula here</string>
+  <string name="incorrect_username_login">Incorrect username/password</string>
+  <string name="logging_in">Logging in...</string>
+  <string name="info">Info</string>
+  <string name="category">Category</string>
+  <string name="reviews">Reviews</string>
+  <string name="checking_server_connection">Checking connection to server...</string>
+  <string name="getting_basic_info">Getting basic info...</string>
 </resources>
